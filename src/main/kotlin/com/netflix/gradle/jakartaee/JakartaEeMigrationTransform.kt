@@ -1,4 +1,4 @@
-package com.netflix.gradle.jakartaee.transform
+package com.netflix.gradle.jakartaee
 
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import org.apache.tomcat.jakartaee.EESpecProfiles
@@ -15,7 +15,7 @@ import org.gradle.api.tasks.PathSensitivity
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 
-abstract class JakartaEeTransform : TransformAction<JakartaEeTransform.Parameters> {
+abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeMigrationTransform.Parameters> {
     interface Parameters : TransformParameters {
         /*
          * Transforms cannot be applied conditionally, only to all artifacts of a given type, and transforms themselves
@@ -27,7 +27,7 @@ abstract class JakartaEeTransform : TransformAction<JakartaEeTransform.Parameter
         fun setExcludedArtifacts(excludedArtifact: List<ArtifactCoordinate>)
     }
 
-    private val logger = LoggerFactory.getLogger(JakartaEeTransform::class.java)
+    private val logger = LoggerFactory.getLogger(JakartaEeMigrationTransform::class.java)
     private val excludedCachePaths by lazy {
         parameters.getExcludedArtifacts().map {
             "/${it.group}/${it.name}/"

@@ -2,7 +2,6 @@ package com.netflix.gradle.jakartaee
 
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.specifications.Specification
-import com.netflix.gradle.jakartaee.transform.JakartaEeTransform
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.dsl.DependencyHandler
@@ -78,7 +77,7 @@ open class JakartaEeMigrationExtension(
             artifactTypes.named(ArtifactTypeDefinition.JAR_TYPE) {
                 it.attributes.attribute(JAKARTAEE_ATTRIBUTE, false)
             }
-            registerTransform(JakartaEeTransform::class.java) {
+            registerTransform(JakartaEeMigrationTransform::class.java) {
                 with(it) {
                     from.attribute(JAKARTAEE_ATTRIBUTE, false)
                         .attribute(ARTIFACT_TYPE_ATTRIBUTE, ArtifactTypeDefinition.JAR_TYPE)
