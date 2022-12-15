@@ -45,7 +45,7 @@ public open class JakartaEeMigrationExtension(
      */
     public fun migrate() {
         configurations.all { configuration ->
-            if (configuration.isCanBeResolved) {
+            if (configuration.name != "resolutionRules" && configuration.isCanBeResolved) {
                 migrate(configuration)
             }
         }
