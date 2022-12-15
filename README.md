@@ -101,7 +101,7 @@ jakartaeeMigration {
 }
 ```
 
-## Excluding Artifacts
+### Excluding Artifacts from Transformation
 
 Artifacts can be excluded from transforms using `excludeTransform`:
 ```
@@ -113,7 +113,7 @@ jakartaeeMigration {
 }
 ```
 
-## Excluding Specification Artifacts
+### Excluding Specification Artifacts from Transformation
 
 Exclude all EE API artifacts from transforms. Ensures that known artifacts providing `javax` classes are not transformed, requiring that replacement `jakarta` artifacts are explicitly added to the project.
 ```
