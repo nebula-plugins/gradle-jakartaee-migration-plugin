@@ -10,7 +10,7 @@ Provides Gradle capabilities and transforms to ease the migration from Java EE t
 
 ## Features
 
-- Configures [capabilities](https://docs.gradle.org/current/userguide/component_capabilities.html) causing the API artifacts of the EE specification to conflict
+- Configures [capabilities](https://docs.gradle.org/current/userguide/component_capabilities.html) causing legacy and modern API artifacts of the EE specification to conflict
 - Configures [capabilities resolution](https://docs.gradle.org/current/userguide/dependency_capability_conflict.html) to resolve capability conflicts by selecting the artifact providing the highest specification version:
     - Tomcat and GlassFish release versions, which use their own version scheme, are translated to specification version
     - Bundle artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` and `org.glassfish:jakarta.json` that contain both the EE API and implementation are preferred regardless of specification version provided 
