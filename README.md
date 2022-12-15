@@ -16,6 +16,8 @@ Provides Gradle capabilities and transforms to ease the migration from Java EE t
     - Bundle artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` and `org.glassfish:jakarta.json` that contain both the EE API and implementation are preferred regardless of specification version provided 
 - [Transforms](https://docs.gradle.org/current/userguide/artifact_transforms.html) automate the migration of `javax` to `jakarta` packages for legacy artifacts
 
+Compatible with Gradle 4.0 and later.
+
 ### Capabilities
 
 Capabilities are configured for every [EE specification](src/main/kotlin/com/netflix/gradle/jakartaee/specifications). They require that only one artifact provide a given EE specification API:   
