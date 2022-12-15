@@ -49,11 +49,8 @@ Transformed reload4j-1.2.22.jar to JakartaEE reload4j-1.2.22-jakartaee.jar
 
 ## Applying the Plugin
 
-```
-plugins {
-    id 'com.netflix.nebula.jakartaee-migration' version '<version>'
-}
-```
+Refer to the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.netflix.nebula.jakartaee-migration).
+
 ## Configuring the Plugin
 
 ### Migrate from EE 8 and earlier to EE 9 and later
