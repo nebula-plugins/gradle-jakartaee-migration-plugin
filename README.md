@@ -103,7 +103,7 @@ jakartaeeMigration {
 
 ## Excluding Artifacts
 
-Artifacts can be excluded from transforms using `exclude`:
+Artifacts can be excluded from transforms using `excludeTransform`:
 ```
 jakartaeeMigration {
     // These artifacts have intentional references to 'javax'
