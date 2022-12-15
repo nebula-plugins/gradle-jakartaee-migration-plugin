@@ -27,7 +27,7 @@ dependencies {
     }
 }
 
-description 'Gradle JakartaEE Ecosystem Plugin'
+description 'Gradle Jakarta EE Migration Plugin'
 
 contacts {
     'nebula-plugins-oss@netflix.com' {
