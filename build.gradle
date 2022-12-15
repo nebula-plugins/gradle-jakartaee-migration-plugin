@@ -22,7 +22,9 @@ plugins {
 }
 
 dependencies {
-    implementation 'org.apache.tomcat:jakartaee-migration:1.0.6'
+    implementation ('org.apache.tomcat:jakartaee-migration:1.0.6:shaded') {
+        exclude group: '*', module: '*'
+    }
 }
 
 description 'Gradle JakartaEE Ecosystem Plugin'
