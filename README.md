@@ -76,7 +76,7 @@ This is most useful for standalone application projects, but could certainly be 
 
 ### Configure Only Capabilities
 
-Configure only capabilities to cause EE API artifacts to conflict if more than one is present. Particularly useful for library authors that want to avoid accidentally exposing more than one implementation, or projects migrate completely to the `jakarta` package names/artifacts. 
+Configure only capabilities to cause EE API artifacts to conflict if more than one is present. Particularly useful for library authors that want to avoid accidentally exposing more than one implementation, or projects that want to migrate completely to the `jakarta` package namespace. 
 ```
 jakartaeeMigration {
     configureCapabilities()
