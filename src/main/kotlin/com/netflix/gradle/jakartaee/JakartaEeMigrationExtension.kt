@@ -8,36 +8,22 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.api.attributes.Attribute
 
-open class JakartaEeMigrationExtension(
+public open class JakartaEeMigrationExtension(
     private val configurations: ConfigurationContainer,
     private val dependencies: DependencyHandler
 ) {
-    companion object {
+    private companion object {
         // Gradle's ArtifactTypeDefinition doesn't have this until 7.3
         private val ARTIFACT_TYPE_ATTRIBUTE = Attribute.of("artifactType", String::class.java)
         private val JAKARTAEE_ATTRIBUTE = Attribute.of("com.netflix.gradle.jakartaee", Boolean::class.javaObjectType)
-
-        /**
-         * Artifacts that intentionally reference javax packages and/or should be upgraded for Jakarta support should
-         * not be transformed.
-         */
-        private val INTENTIONAL_JAVAX_ARTIFACTS = listOf(
-            ArtifactCoordinate("org.springframework", "spring-context"),
-            ArtifactCoordinate("org.springframework", "spring-beans"),
-        )
     }
 
     private val excluded = mutableListOf<ArtifactCoordinate>()
 
-    init {
-        val specificationArtifacts = Specification.SPECIFICATIONS
-            .flatMap { specification -> specification.coordinates }
-            .distinct()
-        excluded += INTENTIONAL_JAVAX_ARTIFACTS
-        excluded += specificationArtifacts
-    }
-
-    fun migrateResolvableConfigurations() {
+    /**
+     * Enable migration for all resolvable (i.e. isCanBeResolved == true) configurations.
+     */
+    public fun migrateResolvableConfigurations() {
         configurations.all { configuration ->
             if (configuration.isCanBeResolved) {
                 migrateConfiguration(configuration)
@@ -45,11 +31,21 @@ open class JakartaEeMigrationExtension(
         }
     }
 
-    fun migrateConfigurationNamed(configurationName: String) {
+    /**
+     * Enable migration for a given configuration by name.
+     *
+     * @param configurationName the name of the configuration to be migrated
+     */
+    public fun migrateConfigurationNamed(configurationName: String) {
         migrateConfiguration(configurations.getByName(configurationName))
     }
 
-    fun migrateConfiguration(configuration: Configuration) {
+    /**
+     * Enable migration for a given configuration.
+     *
+     * @param configuration the configuration to be migrated
+     */
+    public fun migrateConfiguration(configuration: Configuration) {
         check(configuration.isCanBeResolved) { "Configuration ${configuration.name} cannot be resolved" }
         configuration.attributes.attribute(JAKARTAEE_ATTRIBUTE, true)
         Specification.SPECIFICATIONS.forEach { specification ->
@@ -57,10 +53,25 @@ open class JakartaEeMigrationExtension(
         }
     }
 
-    fun exclude(notation: String) {
+    /**
+     * Exclude an artifact from migration.
+     *
+     * @param notation artifact notation in the form group:module
+     */
+    public fun exclude(notation: String) {
         val split = notation.split(":")
         check(split.size == 2) { "Invalid notation, should be in the form group:module" }
         excluded += ArtifactCoordinate(split[0], split[1])
+    }
+
+    /**
+     * Exclude all specification artifacts from the migration.
+     */
+    public fun excludeSpecificationArtifacts() {
+        val specificationArtifacts = Specification.SPECIFICATIONS
+            .flatMap { specification -> specification.coordinates }
+            .distinct()
+        excluded += specificationArtifacts
     }
 
     internal fun registerCapabilities() {

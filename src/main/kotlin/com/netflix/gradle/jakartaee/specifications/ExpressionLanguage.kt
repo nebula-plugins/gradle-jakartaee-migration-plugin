@@ -3,7 +3,7 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
-class ExpressionLanguage : ContainerProvidedSpecification(
+internal class ExpressionLanguage : ContainerProvidedSpecification(
     JAVAX,
     JAKARTA,
     listOf(TOMCAT, TOMCAT_EMBED_EL),

@@ -3,7 +3,7 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
-class Persistence : BasicSpecification(
+internal class Persistence : BasicSpecification(
     ECLIPSE,
     JAKARTA,
     SPECIFICATION_TO_PERSISTENCE_VERSION

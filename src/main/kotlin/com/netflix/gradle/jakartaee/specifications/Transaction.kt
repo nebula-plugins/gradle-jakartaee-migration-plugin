@@ -3,7 +3,7 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
-class Transaction : BasicSpecification(
+internal class Transaction : BasicSpecification(
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_TRANSACTION_VERSION

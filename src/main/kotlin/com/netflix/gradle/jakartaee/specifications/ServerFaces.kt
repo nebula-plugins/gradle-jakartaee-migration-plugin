@@ -4,7 +4,7 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactType
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
-class ServerFaces : BasicSpecification(
+internal class ServerFaces : BasicSpecification(
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_FACES_VERSION

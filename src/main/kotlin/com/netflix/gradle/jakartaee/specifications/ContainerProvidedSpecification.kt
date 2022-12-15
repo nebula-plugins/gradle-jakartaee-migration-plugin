@@ -3,7 +3,7 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.*
 import java.lang.IllegalArgumentException
 
-abstract class ContainerProvidedSpecification(
+abstract internal class ContainerProvidedSpecification(
     javaxCoordinate: ArtifactCoordinate,
     jakartaCoordinate: ArtifactCoordinate,
     private val tomcatCoordinates: List<ArtifactCoordinate>,

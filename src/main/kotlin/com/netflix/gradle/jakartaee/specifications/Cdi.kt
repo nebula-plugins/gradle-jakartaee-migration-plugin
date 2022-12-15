@@ -3,7 +3,7 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
-class Cdi : BasicSpecification(
+internal class Cdi : BasicSpecification(
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_CDI_VERSION

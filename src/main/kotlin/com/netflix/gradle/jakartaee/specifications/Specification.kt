@@ -10,7 +10,7 @@ import org.gradle.api.artifacts.component.ModuleComponentIdentifier
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 @CacheableRule
-interface Specification : ComponentMetadataRule {
+internal interface Specification : ComponentMetadataRule {
     companion object {
         const val CAPABILITY_GROUP = "com.netflix.gradle.jakartaee"
 

@@ -3,7 +3,7 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.*
 import java.lang.IllegalArgumentException
 
-abstract class BasicSpecification(
+internal abstract class BasicSpecification(
     private val javaxCoordinate: ArtifactCoordinate,
     private val jakartaCoordinate: ArtifactCoordinate,
     private val specificationToImplementationVersion: Map<SpecificationVersion, ArtifactVersion>

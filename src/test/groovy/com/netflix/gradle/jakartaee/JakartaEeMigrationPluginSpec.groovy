@@ -4,8 +4,6 @@ import nebula.test.IntegrationTestKitSpec
 
 abstract class JakartaEeMigrationPluginSpec extends IntegrationTestKitSpec {
     def setup() {
-        debug = true
-
         buildFile << """
 plugins {
     id 'java'
@@ -53,6 +51,7 @@ jakartaeeMigration {
         return new File(projectDir, 'build/runtimeClasspath-files.txt')
                 .text
                 .split('\n')
+                .findAll { !it.isEmpty() }
                 .collect { new File(it) }
     }
 }

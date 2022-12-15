@@ -2,7 +2,7 @@ package com.netflix.gradle.jakartaee.artifacts
 
 import java.io.Serializable
 
-data class ArtifactCoordinate(
+internal data class ArtifactCoordinate(
     val group: String,
     val name: String
 ) : Serializable {

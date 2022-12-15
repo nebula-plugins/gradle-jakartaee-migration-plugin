@@ -15,7 +15,7 @@ import org.gradle.api.tasks.PathSensitivity
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 
-abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeMigrationTransform.Parameters> {
+internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeMigrationTransform.Parameters> {
     interface Parameters : TransformParameters {
         /*
          * Transforms cannot be applied conditionally, only to all artifacts of a given type, and transforms themselves

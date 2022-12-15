@@ -1,6 +1,6 @@
 package com.netflix.gradle.jakartaee.artifacts
 
-enum class ArtifactType {
+internal enum class ArtifactType {
     API,
 
     /**

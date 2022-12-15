@@ -3,7 +3,7 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
-class XmlRpc : BasicSpecification(
+internal class XmlRpc : BasicSpecification(
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_XML_RPC_VERSION

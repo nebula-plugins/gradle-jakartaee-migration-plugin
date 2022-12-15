@@ -8,22 +8,25 @@ dependencies {
 
     // Artifacts that should not be transformed
     implementation 'com.google.guava:guava:31.1-jre' // Findbugs annotations
-    implementation 'org.springframework:spring-context:6.0.0' // spring-context, spring-beans have intentional references to javax
 }
 """
 
         expect:
         def files = resolvedRuntimeClasspathFiles()
-        files.size() == 14
+        files.size() == 8
 
         def transformed = files.findAll { it.path.contains("/caches/transforms-") }
         transformed.size() == 1
     }
 
-    def 'javaee api artifacts are not transformed'() {
+    def 'javaee api artifacts are not transformed when specifications are excluded'() {
         buildFile << """
 dependencies {
 ${ApiSpec.JAVAEE7_DEPENDENCIES}
+}
+
+jakartaeeMigration {
+    excludeSpecificationArtifacts()
 }
 """
 

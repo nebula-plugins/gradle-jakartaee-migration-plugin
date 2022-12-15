@@ -2,7 +2,7 @@ package com.netflix.gradle.jakartaee.artifacts
 
 import java.util.*
 
-data class ArtifactVersion(val source: String) : Comparable<ArtifactVersion> {
+internal data class ArtifactVersion(val source: String) : Comparable<ArtifactVersion> {
 
     // Gradle's parsing/comparison code to avoid having to refer to internal classes or take a dependency on a library
     companion object {
