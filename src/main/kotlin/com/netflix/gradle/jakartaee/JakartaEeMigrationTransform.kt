@@ -32,6 +32,11 @@ import org.gradle.api.tasks.PathSensitivity
 import org.gradle.work.DisableCachingByDefault
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
+import java.util.logging.Handler
+import java.util.logging.Level
+import java.util.logging.LogRecord
+import java.util.logging.Logger
+
 
 @DisableCachingByDefault(because = "Transform is fast enough not to benefit from caching")
 internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeMigrationTransform.Parameters> {
@@ -46,7 +51,19 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         fun setExcludedArtifacts(excludedArtifact: List<ArtifactCoordinate>)
     }
 
-    private val logger = LoggerFactory.getLogger(JakartaEeMigrationTransform::class.java)
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(JakartaEeMigrationTransform::class.java)
+
+        init {
+            val logger = Logger.getLogger(Migration::class.java.canonicalName)
+            logger.useParentHandlers = false
+            for (handler in logger.handlers) {
+                logger.removeHandler(handler)
+            }
+            logger.addHandler(TransformHandler(LOGGER))
+        }
+    }
+
     private val excludedCachePaths by lazy {
         parameters.getExcludedArtifacts().map {
             "/${it.group}/${it.name}/"
@@ -60,7 +77,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
     override fun transform(outputs: TransformOutputs) {
         val inputFile = getInputArtifact().get().asFile
         if (excludedCachePaths.any { inputFile.path.contains(it) }) {
-            logger.debug("Skipping JakartaEE transform for {}", inputFile)
+            LOGGER.debug("Skipping JakartaEE transform for {}", inputFile)
             outputs.file(inputFile)
             return
         }
@@ -76,12 +93,28 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         if (migration.hasConverted()) {
             val outputFile = outputs.file("${inputFile.nameWithoutExtension}-jakartaee.jar")
             Files.move(tempFilePath, outputFile.toPath())
-            logger.info("Transformed {} to JakartaEE {}", inputFile.name, outputFile.name)
+            LOGGER.info("Transformed {} to JakartaEE {}", inputFile.name, outputFile.name)
             outputs.file(outputFile)
         } else {
-            logger.info("No JakartaEE transformation required for {}", inputFile.name)
+            LOGGER.info("No JakartaEE transformation required for {}", inputFile.name)
             Files.delete(tempFilePath)
             outputs.file(inputFile)
+        }
+    }
+
+    private class TransformHandler(val logger: org.slf4j.Logger) : Handler() {
+        override fun publish(record: LogRecord) {
+            if (record.level.intValue() < Level.INFO.intValue()) {
+                logger.debug(record.message)
+            } else {
+                logger.info(record.message)
+            }
+        }
+
+        override fun flush() {
+        }
+
+        override fun close() {
         }
     }
 }
