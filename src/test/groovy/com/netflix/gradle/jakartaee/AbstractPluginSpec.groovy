@@ -24,7 +24,6 @@ abstract class AbstractPluginSpec extends IntegrationTestKitSpec {
     def setup() {
         buildFile << """
 plugins {
-    id 'java'
     id 'com.netflix.nebula.jakartaee-migration'
 }
 

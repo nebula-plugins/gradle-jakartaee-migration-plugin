@@ -28,6 +28,5 @@ public class JakartaEeMigrationPlugin : Plugin<Project> {
             project.configurations,
             project.dependencies
         )
-        extension.registerTransform()
     }
 }

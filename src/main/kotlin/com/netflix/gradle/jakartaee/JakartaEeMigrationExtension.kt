@@ -37,6 +37,7 @@ public open class JakartaEeMigrationExtension(
     }
 
     private val configuredCapabilities = AtomicBoolean()
+    private val registeredTransform = AtomicBoolean()
     private val excluded = mutableListOf<ArtifactCoordinate>()
 
     /**
@@ -118,6 +119,9 @@ public open class JakartaEeMigrationExtension(
      */
     public fun transform(configuration: Configuration) {
         check(configuration.isCanBeResolved) { "Configuration ${configuration.name} cannot be resolved" }
+        if (registeredTransform.compareAndSet(false, true)) {
+            registerTransform()
+        }
         configuration.attributes.attribute(JAKARTAEE_ATTRIBUTE, true)
     }
 
@@ -142,13 +146,15 @@ public open class JakartaEeMigrationExtension(
         excluded += specificationArtifacts
     }
 
-    internal fun registerTransform() {
+    private fun registerTransform() {
         with(dependencies) {
             attributesSchema {
                 it.attribute(JAKARTAEE_ATTRIBUTE)
             }
-            artifactTypes.named(ArtifactTypeDefinition.JAR_TYPE) {
-                it.attributes.attribute(JAKARTAEE_ATTRIBUTE, false)
+            artifactTypes.configureEach {
+                if (it.name == ArtifactTypeDefinition.JAR_TYPE) {
+                    it.attributes.attribute(JAKARTAEE_ATTRIBUTE, false)
+                }
             }
             registerTransform(JakartaEeMigrationTransform::class.java) {
                 with(it) {

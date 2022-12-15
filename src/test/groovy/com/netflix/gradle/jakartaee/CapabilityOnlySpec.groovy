@@ -20,6 +20,8 @@ package com.netflix.gradle.jakartaee
 class CapabilityOnlySpec extends AbstractPluginSpec {
     def 'jakarta.servlet-api is preferred'() {
         buildFile << """
+apply plugin: 'java'
+
 dependencies {
     implementation 'javax.servlet:servlet-api:2.2'
     implementation 'javax.servlet:javax.servlet-api:3.0.1'
