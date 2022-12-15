@@ -29,9 +29,11 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
+import org.gradle.work.DisableCachingByDefault
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 
+@DisableCachingByDefault(because = "Transform is fast enough not to benefit from caching")
 internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeMigrationTransform.Parameters> {
     interface Parameters : TransformParameters {
         /*
