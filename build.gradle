@@ -27,7 +27,7 @@ dependencies {
     }
 }
 
-description 'Gradle Jakarta EE Migration Plugin'
+description 'Provides Gradle capabilities and transforms to ease the migration from Java EE to Jakarta EE'
 
 contacts {
     'nebula-plugins-oss@netflix.com' {
