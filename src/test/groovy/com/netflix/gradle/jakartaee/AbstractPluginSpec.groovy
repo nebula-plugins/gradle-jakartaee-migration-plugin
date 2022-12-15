@@ -1,8 +1,9 @@
 package com.netflix.gradle.jakartaee
 
 import nebula.test.IntegrationTestKitSpec
+import org.gradle.testkit.runner.BuildResult
 
-abstract class JakartaEeMigrationPluginSpec extends IntegrationTestKitSpec {
+abstract class AbstractPluginSpec extends IntegrationTestKitSpec {
     def setup() {
         buildFile << """
 plugins {
@@ -34,11 +35,15 @@ repositories {
         }
     }
 }
-
-jakartaeeMigration {
-    migrateResolvableConfigurations()
-}
 """
+    }
+
+    BuildResult resolvedRuntimeClasspathResult() {
+        return runTasks('resolveRuntimeClasspath')
+    }
+
+    BuildResult resolvedRuntimeClasspathFailureResult() {
+        return runTasksAndFail('resolveRuntimeClasspath')
     }
 
     List<String> resolvedRuntimeClasspathCoordinates() {
@@ -47,7 +52,7 @@ jakartaeeMigration {
     }
 
     List<File> resolvedRuntimeClasspathFiles() {
-        runTasks('resolveRuntimeClasspath')
+        runTasks('resolveRuntimeClasspath', '--info')
         return new File(projectDir, 'build/runtimeClasspath-files.txt')
                 .text
                 .split('\n')

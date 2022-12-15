@@ -1,6 +1,6 @@
 package com.netflix.gradle.jakartaee
 
-class BackwardsCompatibilitySpec extends JakartaEeMigrationPluginSpec {
+class BackwardsCompatibilitySpec extends AbstractMigrationSpec {
     def 'plugin compatible with gradle #gradleVersion'() {
        when:
        buildFile << """

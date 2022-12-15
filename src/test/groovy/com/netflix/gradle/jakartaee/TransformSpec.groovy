@@ -1,6 +1,6 @@
 package com.netflix.gradle.jakartaee
 
-class TransformSpec extends JakartaEeMigrationPluginSpec {
+class TransformSpec extends AbstractMigrationSpec {
     def 'artifacts are transformed'() {
         buildFile << """
 dependencies {   
@@ -26,7 +26,7 @@ ${ApiSpec.JAVAEE7_DEPENDENCIES}
 }
 
 jakartaeeMigration {
-    excludeSpecificationArtifacts()
+    excludeSpecificationsTransform()
 }
 """
 
@@ -43,7 +43,7 @@ dependencies {
 }
 
 jakartaeeMigration {
-    exclude('ch.qos.reload4j:reload4j')
+    excludeTransform('ch.qos.reload4j:reload4j')
 }
 """
 

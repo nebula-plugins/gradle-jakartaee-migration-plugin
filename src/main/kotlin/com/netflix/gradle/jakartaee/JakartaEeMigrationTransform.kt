@@ -57,10 +57,10 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         if (migration.hasConverted()) {
             val outputFile = outputs.file("${inputFile.nameWithoutExtension}-jakartaee.jar")
             Files.move(tempFilePath, outputFile.toPath())
-            logger.debug("Transformed {} to JakartaEE {}", inputFile, outputFile)
+            logger.info("Transformed {} to JakartaEE {}", inputFile.name, outputFile.name)
             outputs.file(outputFile)
         } else {
-            logger.debug("No JakartaEE transformation required for {}", inputFile)
+            logger.info("No JakartaEE transformation required for {}", inputFile.name)
             Files.delete(tempFilePath)
             outputs.file(inputFile)
         }

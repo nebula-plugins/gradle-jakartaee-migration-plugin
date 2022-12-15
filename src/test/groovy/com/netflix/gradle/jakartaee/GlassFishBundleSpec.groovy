@@ -1,6 +1,6 @@
 package com.netflix.gradle.jakartaee
 
-class GlassFishBundleSpec extends JakartaEeMigrationPluginSpec {
+class GlassFishBundleSpec extends AbstractMigrationSpec {
     def 'org.glassfish:javax.json is preferred regardless of version'() {
         buildFile << """
 dependencies {

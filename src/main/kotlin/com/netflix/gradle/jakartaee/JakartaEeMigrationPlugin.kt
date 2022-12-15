@@ -11,7 +11,6 @@ public class JakartaEeMigrationPlugin : Plugin<Project> {
             project.configurations,
             project.dependencies
         )
-        extension.registerCapabilities()
         extension.registerTransform()
     }
 }

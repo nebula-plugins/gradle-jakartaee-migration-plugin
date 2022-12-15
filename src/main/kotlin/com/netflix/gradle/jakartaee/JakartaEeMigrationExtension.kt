@@ -7,6 +7,7 @@ import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.api.attributes.Attribute
+import java.util.concurrent.atomic.AtomicBoolean
 
 public open class JakartaEeMigrationExtension(
     private val configurations: ConfigurationContainer,
@@ -18,15 +19,16 @@ public open class JakartaEeMigrationExtension(
         private val JAKARTAEE_ATTRIBUTE = Attribute.of("com.netflix.gradle.jakartaee", Boolean::class.javaObjectType)
     }
 
+    private val configuredCapabilities = AtomicBoolean()
     private val excluded = mutableListOf<ArtifactCoordinate>()
 
     /**
      * Enable migration for all resolvable (i.e. isCanBeResolved == true) configurations.
      */
-    public fun migrateResolvableConfigurations() {
+    public fun migrate() {
         configurations.all { configuration ->
             if (configuration.isCanBeResolved) {
-                migrateConfiguration(configuration)
+                migrate(configuration)
             }
         }
     }
@@ -36,8 +38,8 @@ public open class JakartaEeMigrationExtension(
      *
      * @param configurationName the name of the configuration to be migrated
      */
-    public fun migrateConfigurationNamed(configurationName: String) {
-        migrateConfiguration(configurations.getByName(configurationName))
+    public fun migrate(configurationName: String) {
+        migrate(configurations.getByName(configurationName))
     }
 
     /**
@@ -45,39 +47,82 @@ public open class JakartaEeMigrationExtension(
      *
      * @param configuration the configuration to be migrated
      */
-    public fun migrateConfiguration(configuration: Configuration) {
+    public fun migrate(configuration: Configuration) {
+        resolveCapabilityConflicts(configuration)
+        transform(configuration)
+    }
+
+    /**
+     * Configure capabilities for the project.
+     */
+    public fun configureCapabilities() {
+        if (configuredCapabilities.compareAndSet(false, true)) {
+            Specification.SPECIFICATIONS.forEach { specification ->
+                specification.configureCapabilities(dependencies)
+            }
+        }
+    }
+
+    /**
+     * Resolve capability conflicts for a configuration.
+     *
+     * @param configuration the configuration to configure
+     */
+    public fun resolveCapabilityConflicts(configurationName: String) {
+        resolveCapabilityConflicts(configurations.getByName(configurationName))
+    }
+
+    /**
+     * Enable capability conflict resolution for a configuration.
+     *
+     * @param configuration the configuration to configure
+     */
+    public fun resolveCapabilityConflicts(configuration: Configuration) {
         check(configuration.isCanBeResolved) { "Configuration ${configuration.name} cannot be resolved" }
-        configuration.attributes.attribute(JAKARTAEE_ATTRIBUTE, true)
+        configureCapabilities()
         Specification.SPECIFICATIONS.forEach { specification ->
             specification.configureCapabilitiesResolution(configuration)
         }
     }
 
     /**
-     * Exclude an artifact from migration.
+     * Transform artifacts for the given configuration name.
+     *
+     * @param configurationName the name of the configuration to transform
+     */
+    public fun transform(configurationName: String) {
+        transform(configurations.getByName(configurationName))
+    }
+
+    /**
+     * Transform artifacts for the given configuration name.
+     *
+     * @param configuration the configuration to transform
+     */
+    public fun transform(configuration: Configuration) {
+        check(configuration.isCanBeResolved) { "Configuration ${configuration.name} cannot be resolved" }
+        configuration.attributes.attribute(JAKARTAEE_ATTRIBUTE, true)
+    }
+
+    /**
+     * Exclude an artifact from transformation.
      *
      * @param notation artifact notation in the form group:module
      */
-    public fun exclude(notation: String) {
+    public fun excludeTransform(notation: String) {
         val split = notation.split(":")
         check(split.size == 2) { "Invalid notation, should be in the form group:module" }
         excluded += ArtifactCoordinate(split[0], split[1])
     }
 
     /**
-     * Exclude all specification artifacts from the migration.
+     * Exclude all specification artifacts from transformation.
      */
-    public fun excludeSpecificationArtifacts() {
+    public fun excludeSpecificationsTransform() {
         val specificationArtifacts = Specification.SPECIFICATIONS
             .flatMap { specification -> specification.coordinates }
             .distinct()
         excluded += specificationArtifacts
-    }
-
-    internal fun registerCapabilities() {
-        Specification.SPECIFICATIONS.forEach { specification ->
-            specification.configureCapabilities(dependencies)
-        }
     }
 
     internal fun registerTransform() {

@@ -1,6 +1,6 @@
 package com.netflix.gradle.jakartaee
 
-class ServletSpec extends JakartaEeMigrationPluginSpec {
+class ServletSpec extends AbstractMigrationSpec {
     def 'jakarta.servlet-api is preferred'() {
         buildFile << """
 dependencies {

@@ -1,6 +1,6 @@
 package com.netflix.gradle.jakartaee
 
-class ApiSpec extends JakartaEeMigrationPluginSpec {
+class ApiSpec extends AbstractMigrationSpec {
     public static JAVAEE7_DEPENDENCIES = """
     // These artifacts provide optional dependencies so we need to list them manually
 
