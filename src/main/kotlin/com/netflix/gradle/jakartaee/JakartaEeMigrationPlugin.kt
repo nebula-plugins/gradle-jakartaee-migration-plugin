@@ -22,7 +22,7 @@ import org.gradle.api.Project
 
 public class JakartaEeMigrationPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val extension = project.extensions.create(
+        project.extensions.create(
             "jakartaeeMigration",
             JakartaEeMigrationExtension::class.java,
             project.configurations,

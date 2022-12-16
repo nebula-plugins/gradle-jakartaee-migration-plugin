@@ -41,11 +41,11 @@ public open class JakartaEeMigrationExtension(
     private val excluded = mutableListOf<ArtifactCoordinate>()
 
     /**
-     * Enable migration for all resolvable (i.e. isCanBeResolved == true) configurations.
+     * Enable migration for all configurations.
      */
     public fun migrate() {
         configurations.all { configuration ->
-            if (configuration.name != "resolutionRules" && configuration.isCanBeResolved) {
+            if (configuration.name != "resolutionRules") {
                 migrate(configuration)
             }
         }
@@ -96,7 +96,6 @@ public open class JakartaEeMigrationExtension(
      * @param configuration the configuration to configure
      */
     public fun resolveCapabilityConflicts(configuration: Configuration) {
-        check(configuration.isCanBeResolved) { "Configuration ${configuration.name} cannot be resolved" }
         configureCapabilities()
         Specification.SPECIFICATIONS.forEach { specification ->
             specification.configureCapabilitiesResolution(configuration)
@@ -118,7 +117,6 @@ public open class JakartaEeMigrationExtension(
      * @param configuration the configuration to transform
      */
     public fun transform(configuration: Configuration) {
-        check(configuration.isCanBeResolved) { "Configuration ${configuration.name} cannot be resolved" }
         if (registeredTransform.compareAndSet(false, true)) {
             registerTransform()
         }
