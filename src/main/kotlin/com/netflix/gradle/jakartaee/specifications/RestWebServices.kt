@@ -26,6 +26,7 @@ internal class RestWebServices : BasicSpecification(
     SPECIFICATION_TO_RS_VERSION
 ) {
     companion object {
+        private val JAVAX_JSR311 = ArtifactCoordinate("javax.ws.rs", "jsr311-api") // 0.8 through 1.1.1
         private val JAVAX = ArtifactCoordinate("javax.ws.rs", "javax.ws.rs-api") // 2.0 through 2.1.1
         private val JAKARTA = ArtifactCoordinate("jakarta.ws.rs", "jakarta.ws.rs-api") // 2.1.2 and later
 
@@ -43,6 +44,7 @@ internal class RestWebServices : BasicSpecification(
 
     override val coordinates: List<ArtifactCoordinate>
         get() = listOf(
+            JAVAX_JSR311,
             JAVAX,
             JAKARTA,
         )
