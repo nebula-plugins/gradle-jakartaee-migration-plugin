@@ -29,11 +29,15 @@ plugins {
 
 tasks.register('resolveRuntimeClasspath') {
     doFirst {
-        def coordinates = configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
+        def runtimeClasspath = configurations.findByName('runtimeClasspath')
+        if (!runtimeClasspath) {
+            return
+        }
+        def coordinates = runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
             def id = it.moduleVersion.id
             "\${id.group}:\${id.name}:\${id.version}"
         }.join('\\n')
-        def files = configurations.runtimeClasspath.files.join('\\n')
+        def files = runtimeClasspath.files.join('\\n')
         
         buildDir.mkdirs()
         new File(buildDir, 'runtimeClasspath-coordinates.txt').write(coordinates)

@@ -126,6 +126,10 @@ jakartaeeMigration {
 
 This plugin intentionally avoids managing constraints and other versioning concerns. Use Gradle standard dependency management features in your project configuration.
 
+### Jakarta EE 8
+
+If possible, completely avoid Jakarta EE 8 (i.e. `jakarta` artifact coordinates with `javax` packages). Our goal is this plugin makes the Jakarta EE 9 and later upgrade painless enough that you upgrade straight over that mess. [What is the difference between jaxb-impl and jaxb-runtime?](https://stackoverflow.com/questions/71095913/what-is-the-difference-between-jaxb-impl-and-jaxb-runtime/72151763#72151763) documents one specific option avoiding Jakarta EE 8 API artifacts for JAXB.
+
 ### Platforms
 
 Use `platform` to avoid needing to declare first order dependency versions or `enforcedPlatform` ensure a minimum version of a specification is used:
@@ -134,9 +138,9 @@ Use `platform` to avoid needing to declare first order dependency versions or `e
     implementation 'jakarta.servlet:jakarta.servlet-api'
 ```
 
-### Constraints
+### Rich Versions / Constraints
 
-For stronger guarantees than platforms, use rich versions and constraints. Note that constraints are published in Gradle Module Metadata, so take care when using them in libraries to avoid unintended side effects. These constraints are particularly useful when using Jakarta EE 8 artifacts and you want to avoid accidentally upgrading to EE 9 where the package name change happens.
+For stronger guarantees than platforms, use rich versions and constraints. Note that constraints are published in Gradle Module Metadata, so take care when using them in libraries to avoid unintended side effects. These constraints could be used to successfully use Jakarta EE 8 artifacts and prevent them from accidentally upgrading, but as mentioned above, it's probably more trouble than it's worth.
 
 Use `strictly` to force a version of an artifact:
 ```
@@ -150,7 +154,7 @@ Use `strictly` to force a version of an artifact:
     }
 ```
 
-Or `require` with `reject` to cause dependency resolution to fail if an incompatible version is selected:
+Or `require` with `reject` to cause dependency resolution to fail if an upgrade is attempted:
 ```
     constraints {
         implementation('jakarta.servlet:jakarta.servlet-api') {
