@@ -10,11 +10,9 @@ Provides Gradle capabilities and transforms to ease the migration from Java EE t
 
 ## Features
 
-- Configures [capabilities](https://docs.gradle.org/current/userguide/component_capabilities.html) causing legacy and modern API artifacts of the EE specification to conflict
-- Configures [capabilities resolution](https://docs.gradle.org/current/userguide/dependency_capability_conflict.html) to resolve capability conflicts by selecting the artifact providing the highest specification version:
-    - Tomcat and GlassFish release versions, which use their own version scheme, are translated to specification version
-    - Bundle artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` and `org.glassfish:jakarta.json` that contain both the EE API and implementation are preferred regardless of specification version provided 
-- Configures [transforms](https://docs.gradle.org/current/userguide/artifact_transforms.html) to automate the migration of `javax` to `jakarta` packages for legacy artifacts, avoiding needing to fork or manage multiple release lines for these libraries 
+- [Capabilities](https://docs.gradle.org/current/userguide/component_capabilities.html) to cause legacy and modern API artifacts of the EE specification to conflict
+- [Capabilities Resolution](https://docs.gradle.org/current/userguide/dependency_capability_conflict.html) to resolve those capability conflicts by selecting the artifact providing the highest specification version:
+- [Artifact Transforms](https://docs.gradle.org/current/userguide/artifact_transforms.html) to automate the migration of `javax` to `jakarta` packages for legacy artifacts, avoiding needing to fork or manage multiple release lines for these libraries 
 - Compatible with Gradle 4.0 and later
 
 ### Capabilities
@@ -24,6 +22,13 @@ Capabilities are configured for every [EE specification](src/main/kotlin/com/net
 ```
 Cannot select module with conflict on capability 'com.netflix.gradle.jakartaee:servlet-api:3.0.1' also provided by [javax.servlet:servlet-api:2.2(runtime), javax.servlet:servlet-api:2.2(runtime), jakarta.servlet:jakarta.servlet-api:4.0.2(runtime)]
 ```
+
+### Capabilities Resolution
+
+The default capability resolution strategy is to select the artifact that provides the highest version of the specification, with special handling for certain types of artifacts:
+
+- Tomcat and GlassFish release versions, which use their own version scheme, are translated from release version to specification version
+- Bundle artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` and `org.glassfish:jakarta.json` that contain both the EE API and implementation are preferred regardless of specification version provided 
 
 ### Transform
 
