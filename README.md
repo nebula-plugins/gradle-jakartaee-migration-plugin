@@ -30,7 +30,7 @@ The default capability resolution strategy is to select the artifact that provid
 - Tomcat and GlassFish release versions, which use their own version scheme, are translated from release version to specification version
 - Bundle artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` and `org.glassfish:jakarta.json` that contain both the EE API and implementation are preferred regardless of specification version provided 
 
-### Transform
+### Artifact Transforms
 
 Transforms are implemented using the [tomcat-jakartaee-migration](https://github.com/apache/tomcat-jakartaee-migration) tool. The benefit of using transforms over packaging or deployment time conversion, is that dependencies are transformed and used at build, test, development and runtime, avoiding the potential for unexpected runtime side effects that weren't seen during development.
 
