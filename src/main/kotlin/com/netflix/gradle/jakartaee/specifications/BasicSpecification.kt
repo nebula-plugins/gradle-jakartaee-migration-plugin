@@ -18,13 +18,15 @@
 package com.netflix.gradle.jakartaee.specifications
 
 import com.netflix.gradle.jakartaee.artifacts.*
-import java.lang.IllegalArgumentException
 
 internal abstract class BasicSpecification(
     private val javaxCoordinate: ArtifactCoordinate,
     private val jakartaCoordinate: ArtifactCoordinate,
     private val specificationToImplementationVersion: Map<SpecificationVersion, ArtifactVersion>
 ) : Specification {
+    private val implementationToSpecificationVersion: Map<ArtifactVersion, SpecificationVersion> =
+        specificationToImplementationVersion.entries.associateBy({ it.value }) { it.key }
+
     override fun implementationsForSpecification(specificationVersion: SpecificationVersion): List<ArtifactVersionCoordinate> {
         val defaultImplementation =
             if (specificationVersion <= SpecificationVersion.EE8) javaxCoordinate else jakartaCoordinate
@@ -37,6 +39,12 @@ internal abstract class BasicSpecification(
             return specificationToImplementationVersion[SpecificationVersion.EE7]!!
         }
         return artifactVersion.version.minorVersion
+    }
+
+    override fun specificationForImplementation(version: ArtifactVersion): SpecificationVersion {
+        val minorVersion = version.minorVersion
+        return implementationToSpecificationVersion[minorVersion]
+            ?: SpecificationVersion.EE7
     }
 
     override fun artifactType(artifactCoordinate: ArtifactCoordinate) =

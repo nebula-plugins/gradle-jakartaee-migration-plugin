@@ -18,7 +18,6 @@
 package com.netflix.gradle.jakartaee.specifications
 
 import com.netflix.gradle.jakartaee.artifacts.*
-import org.gradle.api.Project
 import org.gradle.api.artifacts.CacheableRule
 import org.gradle.api.artifacts.ComponentMetadataContext
 import org.gradle.api.artifacts.ComponentMetadataRule
@@ -84,6 +83,8 @@ internal interface Specification : ComponentMetadataRule {
 
     fun implementationVersionFor(artifactVersion: ArtifactVersionCoordinate): ArtifactVersion
 
+    fun specificationForImplementation(version: ArtifactVersion): SpecificationVersion
+
     fun artifactType(artifactCoordinate: ArtifactCoordinate): ArtifactType = ArtifactType.API
 
     fun configureCapabilities(dependencies: DependencyHandler) {
@@ -105,19 +106,19 @@ internal interface Specification : ComponentMetadataRule {
         val coordinateToOrdinal = coordinates
             .mapIndexed { index: Int, coordinate: ArtifactCoordinate -> coordinate to index }
             .toMap()
-
+        val capability = "${CAPABILITY_GROUP}:${name}"
         configuration.resolutionStrategy
             .capabilitiesResolution
-            .withCapability("${CAPABILITY_GROUP}:${name}") { details ->
+            .withCapability(capability) { details ->
                 // selectHighestVersion but using the specification version provided by the artifact
                 details.because("Provides the highest EE specification version")
                 val candidate = details.candidates
                     .filter { it.id is ModuleComponentIdentifier }
                     .sortedByDescending {
-                        val coordinate = (it.id as ModuleComponentIdentifier).toArtifactCoordinate()
+                        val coordinate = it.toCoordinate()
                         coordinateToOrdinal[coordinate.module]
-                    }.maxByOrNull {
-                        val coordinate = (it.id as ModuleComponentIdentifier).toArtifactCoordinate()
+                    }.maxBy {
+                        val coordinate = it.toCoordinate()
                         if (artifactType(coordinate.module) == ArtifactType.BUNDLE) {
                             details.because("Provides a bundled EE API and implementation")
                             // Embedded implementations win regardless of specification/package provided
@@ -125,7 +126,8 @@ internal interface Specification : ComponentMetadataRule {
                         } else {
                             implementationVersionFor(coordinate)
                         }
-                    } ?: return@withCapability
+                    }
+
                 details.select(candidate)
             }
     }
