@@ -64,9 +64,17 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         }
     }
 
-    private val excludedCachePaths by lazy {
-        parameters.getExcludedArtifacts().map {
-            "/${it.group}/${it.name}/"
+    /*
+     * This is unfortunately a bit of a hack, but you can't use component metadata rules to apply attributes to
+     * artifacts. If you add them to the component, they *are* inherited by the artifact, but then the dependency
+     * will fail to resolve. Allowing it to resolve with compatibility rules then causes the transform not to run.
+     */
+    private val excludedPaths by lazy {
+        parameters.getExcludedArtifacts().flatMap {
+            listOf(
+                "/${it.group}/${it.name}/", // Ivy repository layout. Gradle module cache
+                "/${it.group.replace(".", "/")}/${it.name}/" // Maven repository layout
+            )
         }
     }
 
@@ -76,14 +84,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
 
     override fun transform(outputs: TransformOutputs) {
         val inputFile = getInputArtifact().get().asFile
-        /*
-         * This is unfortunately a bit of a hack, but you can't use component metadata rules to apply attributes to
-         * artifacts. If you add them to the component, they *are* inherited by the artifact, but then the dependency
-         * will fail to resolve. Allowing it to resolve with compatibility rules then causes the transform not to run.
-         *
-         * There might be a way of doing this I'm missing, but this looks like the best I can do for now.
-         */
-        if (excludedCachePaths.any { inputFile.path.contains(it) }) {
+        if (excludedPaths.any { inputFile.path.contains(it) }) {
             LOGGER.debug("Skipping JakartaEE transform for {}", inputFile)
             outputs.file(inputFile)
             return
@@ -109,6 +110,9 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         }
     }
 
+    /**
+     * Log handler to push [Migration] logs to info level or below.
+     */
     private class TransformHandler(val logger: org.slf4j.Logger) : Handler() {
         override fun publish(record: LogRecord) {
             if (record.level.intValue() < Level.INFO.intValue()) {
