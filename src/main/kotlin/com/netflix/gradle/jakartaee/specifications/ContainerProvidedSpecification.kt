@@ -53,7 +53,7 @@ abstract internal class ContainerProvidedSpecification(
         val group = artifactVersion.module.group
         if (group.startsWith("tomcat") || group.startsWith("org.apache.tomcat")) {
             val specificationVersion = TOMCAT_TO_EE_VERSION[implementationVersion]
-                ?: throw IllegalArgumentException("No specification version found for Tomcat $implementationVersion")
+                ?: SpecificationVersion.EE7
             implementationVersion = specificationToImplementationVersion[specificationVersion]!!
         }
         return implementationVersion
