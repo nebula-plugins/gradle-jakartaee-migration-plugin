@@ -127,6 +127,18 @@ jakartaeeMigration {
 }
 ```
 
+### Including Artifacts to Transformation
+
+Artifacts can be included to transforms using `includeTransform`:
+```
+jakartaeeMigration {
+    // These artifacts have references to 'javax' and must be transformed
+    includeTransform('org.springframework:spring-context')
+    includeTransform('org.springframework:spring-beans')
+    includeTransform('org.apache.tomcat.embed:tomcat-embed-core')
+}
+```
+
 ## Dependency Management
 
 This plugin intentionally avoids managing constraints and other versioning concerns. Use Gradle standard dependency management features in your project configuration.
