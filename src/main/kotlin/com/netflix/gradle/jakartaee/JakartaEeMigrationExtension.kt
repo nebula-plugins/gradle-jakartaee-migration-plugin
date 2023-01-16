@@ -47,6 +47,7 @@ public open class JakartaEeMigrationExtension(
     private val configuredCapabilities = AtomicBoolean()
     private val registeredTransform = AtomicBoolean()
     private val excluded = mutableListOf<ArtifactCoordinate>()
+    private val included = mutableListOf<ArtifactCoordinate>()
 
     init {
         ARTIFACTS_WITH_INTENTIONAL_JAVAX.forEach(::excludeTransform)
@@ -156,6 +157,17 @@ public open class JakartaEeMigrationExtension(
         excluded += specificationArtifacts
     }
 
+    /**
+     * Include an artifact to transformation.
+     *
+     * @param notation artifact notation in the form group:module
+     */
+    public fun includeTransform(notation: String) {
+        val split = notation.split(":")
+        check(split.size == 2) { "Invalid notation, should be in the form group:module" }
+        included += ArtifactCoordinate(split[0], split[1])
+    }
+
     private fun registerTransform() {
         with(dependencies) {
             attributesSchema {
@@ -173,6 +185,7 @@ public open class JakartaEeMigrationExtension(
                     to.attribute(JAKARTAEE_ATTRIBUTE, true)
                         .attribute(ARTIFACT_TYPE_ATTRIBUTE, ArtifactTypeDefinition.JAR_TYPE)
                     parameters.setExcludedArtifacts(excluded)
+                    parameters.setIncludedArtifacts(included)
                 }
             }
         }
