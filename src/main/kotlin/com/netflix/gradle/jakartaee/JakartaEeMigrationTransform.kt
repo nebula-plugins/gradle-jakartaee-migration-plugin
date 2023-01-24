@@ -49,6 +49,10 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         @Input
         fun getExcludedArtifacts(): List<ArtifactCoordinate>
         fun setExcludedArtifacts(excludedArtifact: List<ArtifactCoordinate>)
+
+        @Input
+        fun getIncludedArtifacts(): List<ArtifactCoordinate>
+        fun setIncludedArtifacts(includedArtifact: List<ArtifactCoordinate>)
     }
 
     companion object {
@@ -78,14 +82,28 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         }
     }
 
+    private val includedPaths by lazy {
+        parameters.getIncludedArtifacts().flatMap {
+            listOf(
+                    "/${it.group}/${it.name}/", // Ivy repository layout. Gradle module cache
+                    "/${it.group.replace(".", "/")}/${it.name}/" // Maven repository layout
+            )
+        }
+    }
+
     @PathSensitive(PathSensitivity.ABSOLUTE)
     @InputArtifact
     abstract fun getInputArtifact(): Provider<FileSystemLocation>
 
     override fun transform(outputs: TransformOutputs) {
         val inputFile = getInputArtifact().get().asFile
-        if (excludedPaths.any { inputFile.path.contains(it) }) {
-            LOGGER.debug("Skipping JakartaEE transform for {}", inputFile)
+        if (includedPaths.isNotEmpty() && includedPaths.none { inputFile.invariantSeparatorsPath.contains(it) }) {
+            LOGGER.debug("Skipping JakartaEE transform (not included) for {}", inputFile)
+            outputs.file(inputFile)
+            return
+        }
+        if (excludedPaths.any { inputFile.invariantSeparatorsPath.contains(it) }) {
+            LOGGER.debug("Skipping JakartaEE transform (excluded) for {}", inputFile)
             outputs.file(inputFile)
             return
         }
