@@ -84,8 +84,12 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
 
     override fun transform(outputs: TransformOutputs) {
         val inputFile = getInputArtifact().get().asFile
-        if (!inputFile.exists() || excludedPaths.any { inputFile.path.contains(it) }) {
-            LOGGER.debug("Skipping JakartaEE transform for {}", inputFile)
+        if (!inputFile.exists()) {
+            LOGGER.debug("Skipping JakartaEE transform for {}, input file does not exist", inputFile)
+            return
+        }
+        if (excludedPaths.any { inputFile.path.contains(it) }) {
+            LOGGER.debug("Skipping JakartaEE transform for {}, path is excluded", inputFile)
             outputs.file(inputFile)
             return
         }
