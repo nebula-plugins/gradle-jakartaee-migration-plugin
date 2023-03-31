@@ -102,9 +102,15 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         migration.setEnableDefaultExcludes(false)
 
         migration.execute()
+
         if (migration.hasConverted()) {
             val outputFile = outputs.file("${inputFile.nameWithoutExtension}-jakartaee.jar")
             Files.move(tempFilePath, outputFile.toPath())
+            try {
+                val perms = Files.getPosixFilePermissions(inputFile.toPath())
+                Files.setPosixFilePermissions(outputFile.toPath(), perms)
+            } catch (e: UnsupportedOperationException) {
+            }
             LOGGER.info("Transformed {} to JakartaEE {}", inputFile.name, outputFile.name)
             outputs.file(outputFile)
         } else {
