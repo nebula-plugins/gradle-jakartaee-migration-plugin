@@ -27,10 +27,12 @@ internal class Servlet : ContainerProvidedSpecification(
     SPECIFICATION_TO_SERVLET_VERSION
 ) {
     companion object {
-        private val GLASSFISH = ArtifactCoordinate("org.glassfish", "javax.servlet") // Repackaged OSGi bundle, appears to be EE 6
         private val JAVAX_2 = ArtifactCoordinate("javax.servlet", "servlet-api") // 2.2 through 2.5, also 3.0-alpha-1
         private val JAVAX = ArtifactCoordinate("javax.servlet", "javax.servlet-api") // 3.0.1 through 4.0.1
         private val JAKARTA = ArtifactCoordinate("jakarta.servlet", "jakarta.servlet-api") // 4.0.2 and later
+
+        private val GLASSFISH = ArtifactCoordinate("org.glassfish", "javax.servlet") // Repackaged OSGi bundle, appears to be EE 6
+        private val JETTY = ArtifactCoordinate("org.mortbay.jetty", "servlet-api") // 2.5 and 3.0
 
         private val TOMCAT_5 = ArtifactCoordinate("tomcat", "servlet-api") // 5.0.x though 5.5.x
         private val TOMCAT_6 = ArtifactCoordinate("org.apache.tomcat", "servlet-api") // 6.0.x
@@ -51,6 +53,7 @@ internal class Servlet : ContainerProvidedSpecification(
     override val coordinates: List<ArtifactCoordinate>
         get() = listOf(
             GLASSFISH,
+            JETTY,
             TOMCAT_5,
             TOMCAT_6,
             TOMCAT,
