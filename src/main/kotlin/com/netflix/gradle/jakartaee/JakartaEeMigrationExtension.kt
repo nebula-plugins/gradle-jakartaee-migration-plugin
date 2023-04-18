@@ -34,11 +34,23 @@ public open class JakartaEeMigrationExtension(
         // Gradle's ArtifactTypeDefinition doesn't have this until 7.3
         private val ARTIFACT_TYPE_ATTRIBUTE = Attribute.of("artifactType", String::class.java)
         private val JAKARTAEE_ATTRIBUTE = Attribute.of("com.netflix.gradle.jakartaee", Boolean::class.javaObjectType)
+
+        // Artifacts that include intentional references to javax packages that should never be transformed
+        private val ARTIFACTS_WITH_INTENTIONAL_JAVAX = listOf(
+            "org.springframework:spring-context",
+            "org.springframework:spring-beans",
+            "org.apache.tomcat.embed:tomcat-embed-core",
+            "org.apache.groovy:groovy",
+        )
     }
 
     private val configuredCapabilities = AtomicBoolean()
     private val registeredTransform = AtomicBoolean()
     private val excluded = mutableListOf<ArtifactCoordinate>()
+
+    init {
+        ARTIFACTS_WITH_INTENTIONAL_JAVAX.forEach(::excludeTransform)
+    }
 
     /**
      * Enable migration for all configurations.

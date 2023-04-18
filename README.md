@@ -106,6 +106,10 @@ jakartaeeMigration {
 }
 ```
 
+### Default Excludes
+
+Several artifacts are excluded by default because they are known to contain intentional references to `javax` packages. See `JakartaEeMigrationExtension.ARTIFACTS_WITH_INTENTIONAL_JAVAX` for details.
+
 ### Excluding Artifacts from Transformation
 
 Artifacts can be excluded from transforms using `excludeTransform`:
