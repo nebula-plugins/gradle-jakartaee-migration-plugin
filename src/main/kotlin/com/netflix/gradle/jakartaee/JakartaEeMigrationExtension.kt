@@ -41,6 +41,7 @@ public open class JakartaEeMigrationExtension(
             "org.springframework:spring-beans",
             "org.apache.tomcat.embed:tomcat-embed-core",
             "org.apache.groovy:groovy",
+            "org.apache.groovy:groovy-all",
         )
     }
 
