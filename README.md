@@ -115,9 +115,6 @@ Several artifacts are excluded by default because they are known to contain inte
 Artifacts can be excluded from transforms using `excludeTransform`:
 ```
 jakartaeeMigration {
-    // These artifacts have intentional references to 'javax'
-    excludeTransform('org.springframework:spring-context')
-    excludeTransform('org.springframework:spring-beans')
     excludeTransform('org.apache.tomcat.embed:tomcat-embed-core')
 }
 ```
