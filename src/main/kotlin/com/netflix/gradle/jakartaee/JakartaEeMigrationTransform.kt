@@ -88,7 +88,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
             LOGGER.debug("Skipping JakartaEE transform for {}, input file does not exist", inputFile)
             return
         }
-        if (excludedPaths.any { inputFile.path.contains(it) }) {
+        if (excludedPaths.any { inputFile.invariantSeparatorsPath.contains(it) }) {
             LOGGER.debug("Skipping JakartaEE transform for {}, path is excluded", inputFile)
             outputs.file(inputFile)
             return
