@@ -79,13 +79,24 @@ internal interface Specification : ComponentMetadataRule {
      */
     val coordinates: List<ArtifactCoordinate>
 
-    fun implementationsForSpecification(specificationVersion: SpecificationVersion): List<ArtifactVersionCoordinate>
+    /**
+     * Coordinates of known javax packages.
+     */
+    val javaxCoordinates: List<ArtifactCoordinate>
+
+    fun implementationForSpecification(specificationVersion: SpecificationVersion): ArtifactVersionCoordinate
 
     fun implementationVersionFor(artifactVersion: ArtifactVersionCoordinate): ArtifactVersion
 
     fun specificationForImplementation(version: ArtifactVersion): SpecificationVersion
 
     fun artifactType(artifactCoordinate: ArtifactCoordinate): ArtifactType = ArtifactType.API
+
+    fun isApiArtifact(artifactCoordinate: ArtifactCoordinate): Boolean =
+        artifactType(artifactCoordinate) == ArtifactType.API
+
+    fun isApiArtifact(artifactVersion: ArtifactVersionCoordinate): Boolean =
+        artifactType(artifactVersion.module) == ArtifactType.API
 
     fun configureCapabilities(dependencies: DependencyHandler) {
         val components = dependencies.components
@@ -119,7 +130,7 @@ internal interface Specification : ComponentMetadataRule {
                         coordinateToOrdinal[coordinate.module]
                     }.maxBy {
                         val coordinate = it.toCoordinate()
-                        if (artifactType(coordinate.module) == ArtifactType.BUNDLE) {
+                        if (artifactType(coordinate.module) == ArtifactType.EMBEDDED) {
                             details.because("Provides a bundled EE API and implementation")
                             // Embedded implementations win regardless of specification/package provided
                             ArtifactVersion(Integer.MAX_VALUE.toString())
@@ -131,4 +142,16 @@ internal interface Specification : ComponentMetadataRule {
                 details.select(candidate)
             }
     }
+
+    fun substituteJakartaApi(configuration: Configuration) {
+        configuration.resolutionStrategy.dependencySubstitution { substitution ->
+            val jakartaImplementation = implementationForSpecification(SpecificationVersion.EE9)
+            val to = substitution.module(jakartaImplementation.notation)
+            javaxCoordinates.forEach { coordinate ->
+                val from = substitution.module(coordinate.notation)
+                substitution.substitute(from).using(to).because("JakartaEE API artifacts are required")
+            }
+        }
+    }
+
 }

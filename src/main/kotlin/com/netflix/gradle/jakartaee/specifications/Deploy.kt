@@ -21,8 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Deploy : BasicSpecification(
+    "enterprise.deploy-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_DEPLOY_VERSION
 ) {
     companion object {
@@ -38,15 +41,14 @@ internal class Deploy : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("1.7"),
             SpecificationVersion.EE10 to ArtifactVersion("1.7"),
         )
-    }
 
-    override val name: String
-        get() = "enterprise.deploy-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             GLASSFISH,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAVAX,
             JAKARTA,
         )
+    }
 }

@@ -23,5 +23,5 @@ internal enum class ArtifactType {
     /**
      * Artifact bundles both API and implementation, and should be preferred.
      */
-    BUNDLE
+    EMBEDDED
 }

@@ -21,8 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class JavaBeans : BasicSpecification(
+    "ejb-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_EJB_VERSION
 ) {
     companion object {
@@ -39,17 +42,16 @@ internal class JavaBeans : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("4.0"),
             SpecificationVersion.EE10 to ArtifactVersion("4.0"),
         )
-    }
 
-    override val name: String
-        get() = "ejb-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             GLASSFISH,
             JAVAX,
             JAVAX_3_0,
             JAVAX_3_2,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
         )
+    }
 }

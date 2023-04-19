@@ -22,8 +22,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactType
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class ServerFaces : BasicSpecification(
+    "faces-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_FACES_VERSION
 ) {
     companion object {
@@ -40,24 +43,16 @@ internal class ServerFaces : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("3.0"),
             SpecificationVersion.EE10 to ArtifactVersion("4.0"),
         )
-    }
 
-    override val name: String
-        get() = "faces-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             JAVAX_LEGACY,
             JAVAX,
             JAVAX_GLASSFISH,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
             JAKARTA_GLASSFISH,
         )
-
-    override fun artifactType(artifactCoordinate: ArtifactCoordinate): ArtifactType {
-        if (artifactCoordinate.group == "org.glassfish") {
-            return ArtifactType.BUNDLE
-        }
-        return super.artifactType(artifactCoordinate)
     }
 }

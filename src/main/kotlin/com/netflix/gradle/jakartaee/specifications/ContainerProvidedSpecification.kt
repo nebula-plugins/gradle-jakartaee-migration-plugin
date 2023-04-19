@@ -18,14 +18,22 @@
 package com.netflix.gradle.jakartaee.specifications
 
 import com.netflix.gradle.jakartaee.artifacts.*
-import java.lang.IllegalArgumentException
 
 internal abstract class ContainerProvidedSpecification(
+    name: String,
     javaxCoordinate: ArtifactCoordinate,
+    javaxCoordinates: List<ArtifactCoordinate>,
     jakartaCoordinate: ArtifactCoordinate,
-    private val tomcatCoordinates: List<ArtifactCoordinate>,
+    jakartaCoordinates: List<ArtifactCoordinate>,
     private val specificationToImplementationVersion: Map<SpecificationVersion, ArtifactVersion>
-) : BasicSpecification(javaxCoordinate, jakartaCoordinate, specificationToImplementationVersion) {
+) : BasicSpecification(
+    name,
+    javaxCoordinate,
+    javaxCoordinates,
+    jakartaCoordinate,
+    jakartaCoordinates,
+    specificationToImplementationVersion
+) {
     companion object {
         internal val TOMCAT_TO_EE_VERSION = mapOf(
             ArtifactVersion("8.0") to SpecificationVersion.EE7,
@@ -42,12 +50,6 @@ internal abstract class ContainerProvidedSpecification(
             ArtifactCoordinate("org.apache.tomcat.embed", "tomcat-embed-core") // 7.0.0 and later
     }
 
-    override fun implementationsForSpecification(specificationVersion: SpecificationVersion): List<ArtifactVersionCoordinate> {
-        val tomcatVersion = EE_TO_TOMCAT_VERSION[specificationVersion]!!
-        return super.implementationsForSpecification(specificationVersion) +
-                tomcatCoordinates.map { it.withVersion(tomcatVersion.source) }
-    }
-
     override fun implementationVersionFor(artifactVersion: ArtifactVersionCoordinate): ArtifactVersion {
         var implementationVersion: ArtifactVersion = super.implementationVersionFor(artifactVersion)
         val group = artifactVersion.module.group
@@ -61,7 +63,7 @@ internal abstract class ContainerProvidedSpecification(
 
     override fun artifactType(artifactCoordinate: ArtifactCoordinate): ArtifactType {
         return if (artifactCoordinate.group == "org.apache.tomcat.embed") {
-            ArtifactType.BUNDLE
+            ArtifactType.EMBEDDED
         } else ArtifactType.API
     }
 }

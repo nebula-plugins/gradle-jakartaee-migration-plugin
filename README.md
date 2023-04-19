@@ -128,6 +128,15 @@ jakartaeeMigration {
 }
 ```
 
+### Ensure JakartaEE Artifacts
+
+Ensure that at minimum an EE9 version of every `javax` API resolved is available. This avoids having to manually provide replacement artifacts, while not affecting conflict resolution and capabilities resolution between `jakarta` artifacts.
+```
+jakartaeeMigration {
+    ensureJakartaApi()
+}
+```
+
 ## Dependency Management
 
 This plugin intentionally avoids managing constraints and other versioning concerns. Use Gradle standard dependency management features in your project configuration.

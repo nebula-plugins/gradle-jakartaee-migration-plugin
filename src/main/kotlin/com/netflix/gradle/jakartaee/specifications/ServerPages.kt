@@ -21,9 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class ServerPages : ContainerProvidedSpecification(
+    "jsp-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
-    listOf(TOMCAT, TOMCAT_EMBED),
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_JSP_VERSION
 ) {
     companion object {
@@ -44,13 +46,8 @@ internal class ServerPages : ContainerProvidedSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("3.0"),
             SpecificationVersion.EE10 to ArtifactVersion("3.1"),
         )
-    }
 
-    override val name: String
-        get() = "servlet.jsp-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             GLASSFISH,
             TOMCAT_5,
             TOMCAT_6,
@@ -58,7 +55,11 @@ internal class ServerPages : ContainerProvidedSpecification(
             JAVAX_2_0,
             JAVAX_2_X,
             JAVAX,
-            JAKARTA,
-            TOMCAT_EMBED
         )
+
+        private val JAKARTA_COORDINATES = listOf(
+            JAKARTA,
+            TOMCAT_EMBED,
+        )
+    }
 }

@@ -21,6 +21,7 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Concurrent : BasicSpecification(
+    "enterprise.concurrent-api",
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_CONCURRENT_VERSION
@@ -37,13 +38,4 @@ internal class Concurrent : BasicSpecification(
             SpecificationVersion.EE10 to ArtifactVersion("3.0"),
         )
     }
-
-    override val name: String
-        get() = "enterprise.concurrent-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
-            JAVAX,
-            JAKARTA,
-        )
 }

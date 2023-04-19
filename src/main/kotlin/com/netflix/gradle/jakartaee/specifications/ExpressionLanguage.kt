@@ -21,9 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class ExpressionLanguage : ContainerProvidedSpecification(
+    "el-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
-    listOf(TOMCAT, TOMCAT_EMBED_EL),
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_EL_VERSION
 ) {
     companion object {
@@ -42,18 +44,17 @@ internal class ExpressionLanguage : ContainerProvidedSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("4.0"),
             SpecificationVersion.EE10 to ArtifactVersion("5.0"),
         )
-    }
 
-    override val name: String
-        get() = "el-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             TOMCAT_6,
             TOMCAT,
             JAVAX_2,
             JAVAX,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
             TOMCAT_EMBED_EL
         )
+    }
 }

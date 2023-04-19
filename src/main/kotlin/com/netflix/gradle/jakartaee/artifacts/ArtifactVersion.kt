@@ -131,4 +131,8 @@ internal data class ArtifactVersion(val source: String) : Comparable<ArtifactVer
         }
         return parts
     }
+
+    override fun toString(): String {
+        return source
+    }
 }

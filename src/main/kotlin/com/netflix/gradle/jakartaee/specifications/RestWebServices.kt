@@ -21,8 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class RestWebServices : BasicSpecification(
+    "ws.rs-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_RS_VERSION
 ) {
     companion object {
@@ -37,15 +40,14 @@ internal class RestWebServices : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("3.0"),
             SpecificationVersion.EE10 to ArtifactVersion("3.1"),
         )
-    }
 
-    override val name: String
-        get() = "ws.rs-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             JAVAX_JSR311,
             JAVAX,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
         )
+    }
 }

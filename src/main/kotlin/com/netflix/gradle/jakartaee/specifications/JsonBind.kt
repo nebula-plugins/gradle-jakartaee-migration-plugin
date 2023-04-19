@@ -21,6 +21,7 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class JsonBind : BasicSpecification(
+    "json.bind-api",
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_JSONB_VERSION
@@ -36,13 +37,4 @@ internal class JsonBind : BasicSpecification(
             SpecificationVersion.EE10 to ArtifactVersion("3.0"),
         )
     }
-
-    override val name: String
-        get() = "json.bind-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
-            JAVAX,
-            JAKARTA,
-        )
 }

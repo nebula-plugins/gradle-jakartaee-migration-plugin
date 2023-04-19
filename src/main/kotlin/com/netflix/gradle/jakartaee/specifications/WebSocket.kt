@@ -21,9 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class WebSocket : ContainerProvidedSpecification(
+    "websocket-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
-    listOf(TOMCAT, TOMCAT_EMBED_WS),
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_WS_VERSION
 ) {
     companion object {
@@ -41,16 +43,15 @@ internal class WebSocket : ContainerProvidedSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("4.0"),
             SpecificationVersion.EE10 to ArtifactVersion("4.0"),
         )
-    }
 
-    override val name: String
-        get() = "websocket-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             TOMCAT,
             JAVAX,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
             TOMCAT_EMBED_WS
         )
+    }
 }

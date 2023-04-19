@@ -20,18 +20,36 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.*
 
 internal abstract class BasicSpecification(
+    final override val name: String,
     private val javaxCoordinate: ArtifactCoordinate,
+    final override val javaxCoordinates: List<ArtifactCoordinate>,
     private val jakartaCoordinate: ArtifactCoordinate,
+    private val jakartaCoordinates: List<ArtifactCoordinate>,
     private val specificationToImplementationVersion: Map<SpecificationVersion, ArtifactVersion>
 ) : Specification {
+
+    constructor(
+        name: String,
+        javaxCoordinate: ArtifactCoordinate,
+        jakartaCoordinate: ArtifactCoordinate,
+        specificationToImplementationVersion: Map<SpecificationVersion, ArtifactVersion>
+    ) : this(
+        name,
+        javaxCoordinate,
+        listOf(javaxCoordinate),
+        jakartaCoordinate,
+        listOf(jakartaCoordinate),
+        specificationToImplementationVersion
+    )
+
     private val implementationToSpecificationVersion: Map<ArtifactVersion, SpecificationVersion> =
         specificationToImplementationVersion.entries.associateBy({ it.value }) { it.key }
 
-    override fun implementationsForSpecification(specificationVersion: SpecificationVersion): List<ArtifactVersionCoordinate> {
+    final override fun implementationForSpecification(specificationVersion: SpecificationVersion): ArtifactVersionCoordinate {
         val defaultImplementation =
             if (specificationVersion <= SpecificationVersion.EE8) javaxCoordinate else jakartaCoordinate
-        val version = specificationToImplementationVersion[specificationVersion]!!.toString()
-        return listOf(defaultImplementation.withVersion(version))
+        val version = specificationToImplementationVersion[specificationVersion]!!.toString() + ".0"
+        return defaultImplementation.withVersion(version)
     }
 
     override fun implementationVersionFor(artifactVersion: ArtifactVersionCoordinate): ArtifactVersion {
@@ -41,7 +59,7 @@ internal abstract class BasicSpecification(
         return artifactVersion.version.minorVersion
     }
 
-    override fun specificationForImplementation(version: ArtifactVersion): SpecificationVersion {
+    final override fun specificationForImplementation(version: ArtifactVersion): SpecificationVersion {
         val minorVersion = version.minorVersion
         return implementationToSpecificationVersion[minorVersion]
             ?: SpecificationVersion.EE7
@@ -49,4 +67,7 @@ internal abstract class BasicSpecification(
 
     override fun artifactType(artifactCoordinate: ArtifactCoordinate) =
         ArtifactType.API
+
+    final override val coordinates: List<ArtifactCoordinate>
+        get() = javaxCoordinates + jakartaCoordinates
 }

@@ -21,8 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Cdi : BasicSpecification(
+    "enterprise.cdi-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_CDI_VERSION
 ) {
     companion object {
@@ -37,15 +40,14 @@ internal class Cdi : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("3.0"),
             SpecificationVersion.EE10 to ArtifactVersion("4.0"),
         )
-    }
 
-    override val name: String
-        get() = "enterprise.cdi-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             JAVAX,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA_ORPHANED,
             JAKARTA,
         )
+    }
 }

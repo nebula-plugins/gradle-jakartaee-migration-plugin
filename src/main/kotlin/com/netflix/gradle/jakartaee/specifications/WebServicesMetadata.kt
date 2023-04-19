@@ -21,8 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class WebServicesMetadata : BasicSpecification(
+    "jws-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_XML_WS_VERSION
 ) {
     companion object {
@@ -39,17 +42,16 @@ internal class WebServicesMetadata : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("3.0"),
             SpecificationVersion.EE10 to ArtifactVersion("3.0"), // Current version, no longer in API
         )
-    }
 
-    override val name: String
-        get() = "jws-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             GLASSFISH,
             JSR181,
             JSR181_API,
             JAVAX,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
         )
+    }
 }

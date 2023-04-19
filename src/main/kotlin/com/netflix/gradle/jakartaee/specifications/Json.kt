@@ -22,8 +22,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactType
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Json : BasicSpecification(
+    "json-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_JSON_VERSION
 ) {
     companion object {
@@ -39,17 +42,15 @@ internal class Json : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("2.0"),
             SpecificationVersion.EE10 to ArtifactVersion("2.1"),
         )
-    }
 
-    override val name: String
-        get() = "json-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             JAVAX,
             JAVAX_GLASSFISH,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
             JAKARTA_GLASSFISH,
         )
-
+    }
 }

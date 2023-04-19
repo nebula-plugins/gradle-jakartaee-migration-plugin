@@ -21,12 +21,16 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Management : BasicSpecification(
+    "management.j2ee-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_MANAGEMENT_VERSION
 ) {
     companion object {
-        private val GLASSFISH = ArtifactCoordinate("org.glassfish", "javax.management.j2ee") // Repackaged OSGi bundle, appears to be EE 6
+        private val GLASSFISH =
+            ArtifactCoordinate("org.glassfish", "javax.management.j2ee") // Repackaged OSGi bundle, appears to be EE 6
         private val JAVAX =
             ArtifactCoordinate("javax.management.j2ee", "javax.management.j2ee-api") // 1.1 through 1.1.2
         private val JAKARTA =
@@ -40,15 +44,14 @@ internal class Management : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("1.1"),
             SpecificationVersion.EE10 to ArtifactVersion("1.1"),
         )
-    }
 
-    override val name: String
-        get() = "management.j2ee-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             GLASSFISH,
             JAVAX,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
         )
+    }
 }

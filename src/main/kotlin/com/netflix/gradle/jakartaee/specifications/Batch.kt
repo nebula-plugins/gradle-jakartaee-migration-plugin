@@ -21,6 +21,7 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Batch : BasicSpecification(
+    "batch-api",
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_BATCH_VERSION
@@ -37,13 +38,4 @@ internal class Batch : BasicSpecification(
             SpecificationVersion.EE10 to ArtifactVersion("2.1"),
         )
     }
-
-    override val name: String
-        get() = "batch-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
-            JAVAX,
-            JAKARTA,
-        )
 }

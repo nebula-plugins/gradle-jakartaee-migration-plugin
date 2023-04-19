@@ -116,6 +116,37 @@ public open class JakartaEeMigrationExtension(
     }
 
     /**
+     * Ensure that at least an EE9 version of all used specifications are available in all configurations.
+     */
+    public fun ensureJakartaApi() {
+        configurations.all { configuration ->
+            if (configuration.name != "resolutionRules") {
+                ensureJakartaApi(configuration)
+            }
+        }
+    }
+
+    /**
+     * Ensure that at least an EE9 version of all used specifications are available in this configuration.
+     *
+     * @param configuration the configuration to configure
+     */
+    public fun ensureJakartaApi(configurationName: String) {
+        resolveCapabilityConflicts(configurations.getByName(configurationName))
+    }
+
+    /**
+     * Ensure that at least an EE9 version of all used specifications are available in this configuration.
+     *
+     * @param configuration the configuration to configure
+     */
+    public fun ensureJakartaApi(configuration: Configuration) {
+        Specification.SPECIFICATIONS.forEach { specification ->
+            specification.substituteJakartaApi(configuration)
+        }
+    }
+
+    /**
      * Transform artifacts for the given configuration name.
      *
      * @param configurationName the name of the configuration to transform

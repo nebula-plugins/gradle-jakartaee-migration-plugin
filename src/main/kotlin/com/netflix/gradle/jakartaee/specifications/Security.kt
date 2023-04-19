@@ -21,6 +21,7 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Security : BasicSpecification(
+    "security.enterprise-api",
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_SECURITY_VERSION
@@ -37,13 +38,4 @@ internal class Security : BasicSpecification(
             SpecificationVersion.EE10 to ArtifactVersion("3.0"),
         )
     }
-
-    override val name: String
-        get() = "security.enterprise-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
-            JAVAX,
-            JAKARTA,
-        )
 }

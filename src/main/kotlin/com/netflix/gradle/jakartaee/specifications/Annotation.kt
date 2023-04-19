@@ -21,9 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Annotation : ContainerProvidedSpecification(
+    "annotation-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
-    listOf(TOMCAT, TOMCAT_EMBED),
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_ANNOTATION_VERSION
 ) {
     companion object {
@@ -42,18 +44,18 @@ internal class Annotation : ContainerProvidedSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("2.0"),
             SpecificationVersion.EE10 to ArtifactVersion("2.1"),
         )
-    }
 
-    override val name: String
-        get() = "annotation-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             GLASSFISH,
             TOMCAT_6,
             TOMCAT,
             JSR250,
             JAVAX,
-            JAKARTA,
         )
+
+        private val JAKARTA_COORDINATES = listOf(
+            JAKARTA,
+
+        )
+    }
 }

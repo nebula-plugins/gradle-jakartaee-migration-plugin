@@ -21,6 +21,7 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Inject : BasicSpecification(
+    "inject-api",
     JAVAX,
     JAKARTA,
     SPECIFICATION_TO_INJECT_VERSION
@@ -37,13 +38,4 @@ internal class Inject : BasicSpecification(
             SpecificationVersion.EE10 to ArtifactVersion("2.0"),
         )
     }
-
-    override val name: String
-        get() = "inject-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
-            JAVAX,
-            JAKARTA,
-        )
 }

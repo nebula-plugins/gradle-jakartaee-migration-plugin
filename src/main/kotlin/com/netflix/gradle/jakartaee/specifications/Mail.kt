@@ -21,8 +21,11 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
 
 internal class Mail : BasicSpecification(
+    "mail-api",
     JAVAX,
+    JAVAX_COORDINATES,
     JAKARTA,
+    JAKARTA_COORDINATES,
     SPECIFICATION_TO_MAIL_VERSION
 ) {
     companion object {
@@ -42,20 +45,19 @@ internal class Mail : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("2.0"),
             SpecificationVersion.EE10 to ArtifactVersion("2.1"),
         )
-    }
 
-    override val name: String
-        get() = "mail-api"
-
-    override val coordinates: List<ArtifactCoordinate>
-        get() = listOf(
+        private val JAVAX_COORDINATES = listOf(
             GLASSFISH,
             SUN_MAILAPI,
             SUN_JAVAX,
             JAVAX_MAILAPI,
             JAVAX_MAIL,
             JAVAX,
+        )
+
+        private val JAKARTA_COORDINATES = listOf(
             JAKARTA_SUN,
             JAKARTA,
         )
+    }
 }
