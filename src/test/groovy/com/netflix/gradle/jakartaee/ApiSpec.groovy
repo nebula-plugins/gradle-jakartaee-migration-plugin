@@ -100,7 +100,7 @@ $JAKARTAEE10_DEPENDENCIES
 
         def faces = coordinates.findAll { it.contains('faces') }
         faces.size() == 1
-        faces[0] == 'org.glassfish:jakarta.faces:4.0.0'
+        faces[0] == 'jakarta.faces:jakarta.faces-api:4.0.1'
     }
 
 }
