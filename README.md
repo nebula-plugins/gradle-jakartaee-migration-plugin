@@ -108,6 +108,24 @@ jakartaeeMigration {
 }
 ```
 
+### Ensure JakartaEE API
+
+Ensure that at minimum an EE9 version of every `javax` API currently on the configuration is available. This avoids having to manually provide replacement artifacts, while not affecting conflict resolution and capabilities resolution between `jakarta` artifacts.
+```
+jakartaeeMigration {
+    ensureJakartaApi('runtimeClasspath')
+}
+```
+
+All configurations can be included using:
+```
+jakartaeeMigration {
+    ensureJakartaApi()
+}
+```
+
+This is intended where upstream library projects are still targeting `javax` and it's undesirable to add replacement artifacts everywhere those projects consumed; prefer to use capabilities resolution otherwise.
+
 ### Default Excludes
 
 Several artifacts are excluded by default because they are known to contain intentional references to `javax` packages. See `JakartaEeMigrationExtension.ARTIFACTS_WITH_INTENTIONAL_JAVAX` for details.
@@ -145,22 +163,6 @@ Prevent accidental configuration of transforms on production configurations, for
 ```
 jakartaeeMigration {
     preventTransformsOfProductionConfigurations()
-}
-```
-
-### Ensure JakartaEE Artifacts
-
-Ensure that at minimum an EE9 version of every `javax` API resolved is available. This avoids having to manually provide replacement artifacts, while not affecting conflict resolution and capabilities resolution between `jakarta` artifacts.
-```
-jakartaeeMigration {
-    ensureJakartaApi('runtimeClasspath')
-}
-```
-
-All configurations can be included using:
-```
-jakartaeeMigration {
-    ensureJakartaApi()
 }
 ```
 
