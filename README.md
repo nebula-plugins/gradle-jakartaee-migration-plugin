@@ -6,7 +6,7 @@
 ![Build](https://github.com/nebula-plugins/gradle-jakartaee-migration-plugin/actions/workflows/nebula.yml/badge.svg)
 [![Apache 2.0](https://img.shields.io/github/license/nebula-plugins/gradle-jakartaee-migration-plugin.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
-Provides Gradle capabilities and transforms to ease the migration from Java EE to Jakarta EE.
+Provides Gradle capabilities, transforms and dependency substitutions to ease the migration from Java EE to Jakarta EE.
 
 ## Features
 
@@ -14,6 +14,7 @@ Provides Gradle capabilities and transforms to ease the migration from Java EE t
 - [Capabilities Resolution](https://docs.gradle.org/current/userguide/dependency_capability_conflict.html) to resolve those capability conflicts by selecting the artifact providing the highest specification version:
 - [Artifact Transforms](https://docs.gradle.org/current/userguide/artifact_transforms.html) to automate the migration of `javax` to `jakarta` packages for legacy artifacts, avoiding needing to fork or manage multiple release lines for these libraries 
 - Compatible with Gradle 4.0 and later
+- [Dependency Substitutions](https://docs.gradle.org/current/userguide/resolution_rules.html#sec:dependency_substitution_rules) allow `javax` specifications to be automaticallly substituted for a JakartaEE version, avoiding having to configure replacements on the classpath
 
 ### Capabilities
 
