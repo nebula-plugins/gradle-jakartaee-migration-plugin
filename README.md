@@ -28,7 +28,8 @@ Cannot select module with conflict on capability 'com.netflix.gradle.jakartaee:s
 The default capability resolution strategy is to select the artifact that provides the highest version of the specification, with special handling for certain types of artifacts:
 
 - Tomcat and GlassFish release versions, which use their own version scheme, are translated from release version to specification version
-- Bundle artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` and `org.glassfish:jakarta.json` that contain both the EE API and implementation are preferred regardless of specification version provided 
+- Embedded container artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` that contain both the EE API and implementation are selected regardless of specification version provided 
+- Bundled artifacts such as `org.glassfish:jakarta.json`  that contain both the EE API and implementation are preferred over their non-bundled counterparts, but obey conflict/capability resolution
 
 ### Artifact Transforms
 
