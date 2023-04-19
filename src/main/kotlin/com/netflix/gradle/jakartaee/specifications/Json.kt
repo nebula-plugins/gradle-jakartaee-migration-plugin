@@ -52,10 +52,4 @@ internal class Json : BasicSpecification(
             JAKARTA_GLASSFISH,
         )
 
-    override fun artifactType(artifactCoordinate: ArtifactCoordinate): ArtifactType {
-        if (artifactCoordinate.group == "org.glassfish") {
-            return ArtifactType.BUNDLE
-        }
-        return super.artifactType(artifactCoordinate)
-    }
 }
