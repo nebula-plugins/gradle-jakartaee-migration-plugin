@@ -152,6 +152,13 @@ jakartaeeMigration {
 Ensure that at minimum an EE9 version of every `javax` API resolved is available. This avoids having to manually provide replacement artifacts, while not affecting conflict resolution and capabilities resolution between `jakarta` artifacts.
 ```
 jakartaeeMigration {
+    ensureJakartaApi('runtimeClasspath')
+}
+```
+
+All configurations can be included using:
+```
+jakartaeeMigration {
     ensureJakartaApi()
 }
 ```
