@@ -128,6 +128,15 @@ jakartaeeMigration {
 }
 ```
 
+### Transforming Only Specified Artifacts
+
+Artifacts can be included explicitly to transforms using `includeTransform`:
+```
+jakartaeeMigration {
+    includeTransform('org.apache.tomcat.embed:tomcat-embed-core')
+}
+```
+
 ### Ensure JakartaEE Artifacts
 
 Ensure that at minimum an EE9 version of every `javax` API resolved is available. This avoids having to manually provide replacement artifacts, while not affecting conflict resolution and capabilities resolution between `jakarta` artifacts.

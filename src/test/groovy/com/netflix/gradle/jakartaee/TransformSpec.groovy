@@ -69,4 +69,25 @@ jakartaeeMigration {
         files.size() == 1
         files.findAll { it.path.contains("/caches/transforms-") }.isEmpty()
     }
+
+
+    def 'artifacts can be included'() {
+        buildFile << """
+dependencies {
+    implementation 'ch.qos.reload4j:reload4j:1.2.22' // javax.mail
+}
+
+jakartaeeMigration {
+    includeTransform('ch.qos.reload4j:reload4j')
+}
+"""
+
+        expect:
+        def files = resolvedRuntimeClasspathFiles()
+        files.size() == 1
+
+        def transformed = files.findAll { it.path.contains("/caches/transforms-") }
+        transformed.size() == 1
+    }
+
 }

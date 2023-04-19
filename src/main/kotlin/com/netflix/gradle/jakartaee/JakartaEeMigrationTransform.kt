@@ -49,6 +49,10 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         @Input
         fun getExcludedArtifacts(): List<ArtifactCoordinate>
         fun setExcludedArtifacts(excludedArtifact: List<ArtifactCoordinate>)
+
+        @Input
+        fun getIncludedArtifacts(): List<ArtifactCoordinate>
+        fun setIncludedArtifacts(includedArtifact: List<ArtifactCoordinate>)
     }
 
     companion object {
@@ -70,12 +74,18 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
      * will fail to resolve. Allowing it to resolve with compatibility rules then causes the transform not to run.
      */
     private val excludedPaths by lazy {
-        parameters.getExcludedArtifacts().flatMap {
-            listOf(
-                "/${it.group}/${it.name}/", // Ivy repository layout. Gradle module cache
-                "/${it.group.replace(".", "/")}/${it.name}/" // Maven repository layout
-            )
-        }
+        parameters.getExcludedArtifacts().toPaths()
+    }
+
+    private val includedPaths by lazy {
+        parameters.getIncludedArtifacts().toPaths()
+    }
+
+    private fun List<ArtifactCoordinate>.toPaths() = flatMap {
+        listOf(
+            "/${it.group}/${it.name}/", // Ivy repository layout. Gradle module cache
+            "/${it.group.replace(".", "/")}/${it.name}/" // Maven repository layout
+        )
     }
 
     @PathSensitive(PathSensitivity.ABSOLUTE)
@@ -86,6 +96,11 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         val inputFile = getInputArtifact().get().asFile
         if (!inputFile.exists()) {
             LOGGER.debug("Skipping JakartaEE transform for {}, input file does not exist", inputFile)
+            return
+        }
+        if (includedPaths.isNotEmpty() && includedPaths.none { inputFile.invariantSeparatorsPath.contains(it) }) {
+            LOGGER.debug("Skipping JakartaEE transform for {}, path is not included", inputFile)
+            outputs.file(inputFile)
             return
         }
         if (excludedPaths.any { inputFile.invariantSeparatorsPath.contains(it) }) {
