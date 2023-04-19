@@ -138,6 +138,15 @@ jakartaeeMigration {
 }
 ```
 
+### Prevent Transformation of Production Configurations
+
+Prevent accidental configuration of transforms on production configurations, for instance in library projects, by enabling: 
+```
+jakartaeeMigration {
+    preventTransformsOfProductionConfigurations()
+}
+```
+
 ### Ensure JakartaEE Artifacts
 
 Ensure that at minimum an EE9 version of every `javax` API resolved is available. This avoids having to manually provide replacement artifacts, while not affecting conflict resolution and capabilities resolution between `jakarta` artifacts.

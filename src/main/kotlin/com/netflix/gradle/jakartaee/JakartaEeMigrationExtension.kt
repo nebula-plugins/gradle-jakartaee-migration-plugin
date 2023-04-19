@@ -24,6 +24,7 @@ import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.api.attributes.Attribute
+import org.gradle.api.plugins.JavaPlugin
 import java.util.concurrent.atomic.AtomicBoolean
 
 public open class JakartaEeMigrationExtension(
@@ -47,6 +48,16 @@ public open class JakartaEeMigrationExtension(
 
     private val configuredCapabilities = AtomicBoolean()
     private val registeredTransform = AtomicBoolean()
+    private val preventTransformOfProductionConfigurations = AtomicBoolean()
+    private val productionConfigurationNames = setOf(
+        JavaPlugin.API_CONFIGURATION_NAME,
+        JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
+        JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
+        JavaPlugin.COMPILE_ONLY_API_CONFIGURATION_NAME,
+        JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME,
+        JavaPlugin.RUNTIME_ONLY_CONFIGURATION_NAME,
+        JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME,
+    )
     private val included = mutableListOf<ArtifactCoordinate>()
     private val excluded = mutableListOf<ArtifactCoordinate>()
 
@@ -165,6 +176,9 @@ public open class JakartaEeMigrationExtension(
         if (registeredTransform.compareAndSet(false, true)) {
             registerTransform()
         }
+        if (preventTransformOfProductionConfigurations.get() && productionConfigurationNames.contains(configuration.name)) {
+            throw IllegalStateException("Use of transforms on production configurations is not allowed (configuration: ${configuration.name})")
+        }
         configuration.attributes.attribute(JAKARTAEE_ATTRIBUTE, true)
     }
 
@@ -198,6 +212,13 @@ public open class JakartaEeMigrationExtension(
             .flatMap { specification -> specification.coordinates }
             .distinct()
         excluded += specificationArtifacts
+    }
+
+    /**
+     * Prevent transforms being configured on well known configurations.
+     */
+    public fun preventTransformsOfProductionConfigurations() {
+        preventTransformOfProductionConfigurations.set(true)
     }
 
     private fun registerTransform() {
