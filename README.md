@@ -34,9 +34,11 @@ The default capability resolution strategy is to select the artifact that provid
 
 ### Artifact Transforms
 
-Transforms are implemented using the [tomcat-jakartaee-migration](https://github.com/apache/tomcat-jakartaee-migration) tool. The benefit of using transforms over packaging or deployment time conversion, is that dependencies are transformed and used at build, test, development and runtime, avoiding the potential for unexpected runtime side effects that weren't seen during development.
+Transforms automatically migrate JavaEE `javax` package references to `jakarta`, and is implemented using the [tomcat-jakartaee-migration](https://github.com/apache/tomcat-jakartaee-migration) tool. The benefit of using transforms over packaging or deployment time conversion, is that dependencies are transformed and used at build, test, development and runtime, avoiding the potential for unexpected runtime side effects that weren't seen during development.
 
-The transform eases migration in ecosystems with legacy libraries that will not get `jakarta` compatible releases, or internal libraries that need to retain `javax` package references while applications roman-ride both package namespaces and multiple release lines would be prohibitive to maintain.
+The transform eases migrations in ecosystems with legacy libraries that will not get `jakarta` compatible releases, or internal libraries that need to retain `javax` package references while applications roman-ride both package namespaces and multiple release lines would be prohibitive to maintain.
+
+Transforms apply tranparently when files are resolved from a Gradle configuration, so your IDE, runtime, test runtime and distribution dependencies will have the transformation applied when configured:
 
 ```
 Migration finished for archive [guava-31.1-jre.jar]
