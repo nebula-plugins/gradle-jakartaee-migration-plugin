@@ -31,6 +31,7 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.work.DisableCachingByDefault
 import org.slf4j.LoggerFactory
+import java.lang.IllegalStateException
 import java.nio.file.Files
 import java.util.logging.Handler
 import java.util.logging.Level
@@ -95,8 +96,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
     override fun transform(outputs: TransformOutputs) {
         val inputFile = getInputArtifact().get().asFile
         if (!inputFile.exists()) {
-            LOGGER.debug("Skipping JakartaEE transform for {}, input file does not exist", inputFile)
-            return
+            throw IllegalStateException("File to be transformed " + inputFile + "does not exist")
         }
         if (includedPaths.isNotEmpty() && includedPaths.none { inputFile.invariantSeparatorsPath.contains(it) }) {
             LOGGER.debug("Skipping JakartaEE transform for {}, path is not included", inputFile)
