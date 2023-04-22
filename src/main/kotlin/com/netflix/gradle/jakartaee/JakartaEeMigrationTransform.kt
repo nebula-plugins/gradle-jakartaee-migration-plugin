@@ -31,10 +31,14 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.work.DisableCachingByDefault
 import org.slf4j.LoggerFactory
+import java.io.FileInputStream
 import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.io.UncheckedIOException
 import java.lang.IllegalStateException
 import java.nio.file.Files
+import java.util.jar.JarFile
+import java.util.jar.JarOutputStream
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -98,7 +102,8 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
     override fun transform(outputs: TransformOutputs) {
         val inputFile = getInputArtifact().get().asFile
         if (!inputFile.exists()) {
-            LOGGER.warn("File to be transformed {} does not exist", inputFile)
+            LOGGER.error("File to be transformed {} does not exist, creating empty jar file", inputFile)
+            JarOutputStream(FileOutputStream(inputFile)).close()
             outputs.file(inputFile)
             return
         }
