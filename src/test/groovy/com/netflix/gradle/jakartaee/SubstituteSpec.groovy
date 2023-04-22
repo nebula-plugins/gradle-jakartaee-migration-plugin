@@ -17,7 +17,7 @@
 
 package com.netflix.gradle.jakartaee
 
-class EnsureJakartaApiSpec extends AbstractMigrationSpec {
+class SubstituteSpec extends AbstractMigrationSpec {
 
     def 'jakarta.servlet-api substitutes javax.servlet-api'() {
         debug = true
@@ -28,7 +28,7 @@ dependencies {
 }
 
 jakartaeeMigration {
-    ensureJakartaApi()
+    substitute()
 }
 """
 
@@ -47,7 +47,7 @@ dependencies {
 }
 
 jakartaeeMigration {
-    ensureJakartaApi()
+    substitute()
 }
 """
 
@@ -66,7 +66,7 @@ dependencies {
 }
 
 jakartaeeMigration {
-    ensureJakartaApi()
+    substitute()
 }
 """
 

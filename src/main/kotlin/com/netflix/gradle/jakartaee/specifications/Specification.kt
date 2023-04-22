@@ -143,7 +143,7 @@ internal interface Specification : ComponentMetadataRule {
             }
     }
 
-    fun substituteJakartaApi(configuration: Configuration) {
+    fun substitute(configuration: Configuration) {
         configuration.resolutionStrategy.dependencySubstitution { substitution ->
             val jakartaImplementation = implementationForSpecification(SpecificationVersion.EE9)
             val to = substitution.module(jakartaImplementation.notation)

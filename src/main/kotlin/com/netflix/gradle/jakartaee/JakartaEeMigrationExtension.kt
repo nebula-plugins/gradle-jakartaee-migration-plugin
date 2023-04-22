@@ -130,10 +130,10 @@ public open class JakartaEeMigrationExtension(
     /**
      * Ensure that at least an EE9 version of all used specifications are available in all configurations.
      */
-    public fun ensureJakartaApi() {
+    public fun substitute() {
         configurations.all { configuration ->
             if (configuration.name != "resolutionRules") {
-                ensureJakartaApi(configuration)
+                substitute(configuration)
             }
         }
     }
@@ -143,8 +143,8 @@ public open class JakartaEeMigrationExtension(
      *
      * @param configuration the configuration to configure
      */
-    public fun ensureJakartaApi(configurationName: String) {
-        resolveCapabilityConflicts(configurations.getByName(configurationName))
+    public fun substitute(configurationName: String) {
+        substitute(configurations.getByName(configurationName))
     }
 
     /**
@@ -152,9 +152,9 @@ public open class JakartaEeMigrationExtension(
      *
      * @param configuration the configuration to configure
      */
-    public fun ensureJakartaApi(configuration: Configuration) {
+    public fun substitute(configuration: Configuration) {
         Specification.SPECIFICATIONS.forEach { specification ->
-            specification.substituteJakartaApi(configuration)
+            specification.substitute(configuration)
         }
     }
 

@@ -64,14 +64,14 @@ Refer to the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.netfli
 
 ### Migrate from EE 8 and earlier to EE 9 and later
 
-To enable automatic migration from EE 8 (`javax`) or earlier to EE 9 (`jakarta`) or later, enable all features with `migrate()`:
+To enable automatic migration from EE 8 (`javax`) or earlier to EE 9 (`jakarta`) or later, enable capabilities, capability conflict resolution and transforms with `migrate()`:
 ```
 jakartaeeMigration {
     migrate()
 }
 ```
 
-This configures artifact transforms, capabilities and capability resolution for all resolvable configurations in the project. Alternatively, you can apply to configurations conditionally by using: 
+Alternatively, you can apply to configurations conditionally by using: 
 
 ```
 configurations.all { config ->
@@ -81,7 +81,20 @@ configurations.all { config ->
 }
 ```
 
-This is most useful for standalone application projects, but could certainly be used for libraries if you control the plugins on it and the downstream projects, applying the migration on all projects.
+This is most useful for standalone application projects, as transforms should be avoided for library projects. Replacement JakartaEE APIs need to be provided explicitly on the classpath and will not be automatically provided.
+
+### Migrate without needing to provide JakartaEE API dependencies
+
+Call `substitute` to automatically substitute EE9 APIs for every JavaEE API currently on the configuration. This avoids having to manually provide replacement artifacts:
+```
+jakartaeeMigration {
+    substitute()
+}
+```
+
+This does not affecting conflict resolution to higher versions or capabilities resolution between `jakarta` artifacts, and can be combined with `migrate` or any other option.
+
+This is useful where upstream library projects are still targeting `javax` and it's undesirable to add replacement artifacts everywhere those projects consumed.
 
 ### Configure Only Capabilities
 
@@ -109,24 +122,6 @@ jakartaeeMigration {
     transform('runtimeClasspath') // configuration name or configuration are supported
 }
 ```
-
-### Ensure JakartaEE API
-
-Ensure that at minimum an EE9 version of every `javax` API currently on the configuration is available. This avoids having to manually provide replacement artifacts, while not affecting conflict resolution and capabilities resolution between `jakarta` artifacts.
-```
-jakartaeeMigration {
-    ensureJakartaApi('runtimeClasspath')
-}
-```
-
-All configurations can be included using:
-```
-jakartaeeMigration {
-    ensureJakartaApi()
-}
-```
-
-This is intended where upstream library projects are still targeting `javax` and it's undesirable to add replacement artifacts everywhere those projects consumed; prefer to use capabilities resolution otherwise.
 
 ### Default Excludes
 

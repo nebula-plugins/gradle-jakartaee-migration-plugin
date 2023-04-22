@@ -110,7 +110,7 @@ $JAVAEE7_DEPENDENCIES
 }
 
 jakartaeeMigration {
-    ensureJakartaApi()
+    substitute()
 }
 """
 
