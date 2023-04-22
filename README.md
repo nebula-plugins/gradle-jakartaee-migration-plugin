@@ -92,7 +92,7 @@ jakartaeeMigration {
 }
 ```
 
-This does not affecting conflict resolution to higher versions or capabilities resolution between `jakarta` artifacts, and can be combined with `migrate` or any other option.
+This does not affect conflict resolution to higher versions or capabilities resolution between `jakarta` artifacts, and can be combined with `migrate` or any other option.
 
 This is useful where upstream library projects are still targeting `javax` and it's undesirable to add replacement artifacts everywhere those projects consumed.
 
