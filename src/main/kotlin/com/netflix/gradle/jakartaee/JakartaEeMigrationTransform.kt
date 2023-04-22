@@ -104,6 +104,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         val inputFile = getInputArtifact().get().asFile
         if (!inputFile.exists()) {
             LOGGER.error("File to be transformed {} does not exist, creating empty jar file", inputFile)
+            inputFile.parentFile.mkdirs()
             JarOutputStream(FileOutputStream(inputFile), Manifest()).close()
             outputs.file(inputFile)
             return
