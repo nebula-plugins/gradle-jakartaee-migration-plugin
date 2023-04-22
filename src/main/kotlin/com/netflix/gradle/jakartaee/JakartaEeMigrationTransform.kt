@@ -39,6 +39,7 @@ import java.lang.IllegalStateException
 import java.nio.file.Files
 import java.util.jar.JarFile
 import java.util.jar.JarOutputStream
+import java.util.jar.Manifest
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -103,7 +104,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         val inputFile = getInputArtifact().get().asFile
         if (!inputFile.exists()) {
             LOGGER.error("File to be transformed {} does not exist, creating empty jar file", inputFile)
-            JarOutputStream(FileOutputStream(inputFile)).close()
+            JarOutputStream(FileOutputStream(inputFile), Manifest()).close()
             outputs.file(inputFile)
             return
         }
