@@ -103,11 +103,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
     override fun transform(outputs: TransformOutputs) {
         val inputFile = getInputArtifact().get().asFile
         if (!inputFile.exists()) {
-            LOGGER.error("File to be transformed {} does not exist, creating empty jar file", inputFile)
-            inputFile.parentFile.mkdirs()
-            JarOutputStream(FileOutputStream(inputFile), Manifest()).close()
-            outputs.file(inputFile)
-            return
+            throw UncheckedIOException(FileNotFoundException(inputFile.absolutePath))
         }
         if (includedPaths.isNotEmpty() && includedPaths.none { inputFile.invariantSeparatorsPath.contains(it) }) {
             LOGGER.debug("Skipping JakartaEE transform for {}, path is not included", inputFile)
