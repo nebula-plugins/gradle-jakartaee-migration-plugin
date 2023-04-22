@@ -31,12 +31,12 @@ internal class XmlRegistry : BasicSpecification(
         private val JAKARTA = ArtifactCoordinate("jakarta.xml.registry", "jakarta.xml.registry-api") // 1.0.9 and later
 
         private val SPECIFICATION_TO_XML_REGISTRY_VERSION = mapOf(
-            SpecificationVersion.EE7 to ArtifactVersion("1.0"),
-            SpecificationVersion.EE8 to ArtifactVersion("1.0"),
+            SpecificationVersion.EE7 to ArtifactVersion("1.0.0"),
+            SpecificationVersion.EE8 to ArtifactVersion("1.0.0"),
             // Optional APIs removed from the BOM for 9.0.0 and later, use last released version
-            SpecificationVersion.EE9 to ArtifactVersion("1.0"),
-            SpecificationVersion.EE9_1 to ArtifactVersion("1.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("1.0"),
+            SpecificationVersion.EE9 to ArtifactVersion("1.0.9"),
+            SpecificationVersion.EE9_1 to ArtifactVersion("1.0.9"),
+            SpecificationVersion.EE10 to ArtifactVersion("1.0.10"),
         )
     }
 }

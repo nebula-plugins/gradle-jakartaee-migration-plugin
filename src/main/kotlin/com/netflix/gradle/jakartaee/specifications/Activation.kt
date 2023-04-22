@@ -37,11 +37,11 @@ internal class Activation : BasicSpecification(
         private val JAKARTA = ArtifactCoordinate("jakarta.activation", "jakarta.activation-api") // 1.2.1 and later
 
         private val SPECIFICATION_TO_ACTIVATION_VERSION = mapOf(
-            SpecificationVersion.EE7 to ArtifactVersion("1.1"), // Inferred from com.sun.mail:javax.mail:1.5.0
-            SpecificationVersion.EE8 to ArtifactVersion("1.1"), // Inferred from com.sun.mail:javax.mail:1.6.0
-            SpecificationVersion.EE9 to ArtifactVersion("2.0"),
-            SpecificationVersion.EE9_1 to ArtifactVersion("2.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("2.1"),
+            SpecificationVersion.EE7 to ArtifactVersion("1.1.0"), // Inferred from com.sun.mail:javax.mail:1.5.0
+            SpecificationVersion.EE8 to ArtifactVersion("1.1.0"), // Inferred from com.sun.mail:javax.mail:1.6.0
+            SpecificationVersion.EE9 to ArtifactVersion("2.0.0"),
+            SpecificationVersion.EE9_1 to ArtifactVersion("2.0.0"),
+            SpecificationVersion.EE10 to ArtifactVersion("2.1.0"),
         )
 
         private val JAVAX_COORDINATES = listOf(

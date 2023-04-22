@@ -36,11 +36,11 @@ internal class Json : BasicSpecification(
         private val JAKARTA_GLASSFISH = ArtifactCoordinate("org.glassfish", "jakarta.json") // Bundle. 1.1.5 and later
 
         private val SPECIFICATION_TO_JSON_VERSION = mapOf(
-            SpecificationVersion.EE7 to ArtifactVersion("1.0"),
-            SpecificationVersion.EE8 to ArtifactVersion("1.0"),
-            SpecificationVersion.EE9 to ArtifactVersion("2.0"),
-            SpecificationVersion.EE9_1 to ArtifactVersion("2.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("2.1"),
+            SpecificationVersion.EE7 to ArtifactVersion("1.0.0"),
+            SpecificationVersion.EE8 to ArtifactVersion("1.0.0"),
+            SpecificationVersion.EE9 to ArtifactVersion("2.0.0"),
+            SpecificationVersion.EE9_1 to ArtifactVersion("2.0.0"),
+            SpecificationVersion.EE10 to ArtifactVersion("2.1.0"),
         )
 
         private val JAVAX_COORDINATES = listOf(

@@ -36,11 +36,11 @@ internal class WebServicesMetadata : BasicSpecification(
         private val JAKARTA = ArtifactCoordinate("jakarta.jws", "jakarta.jws-api") // 1.1.1 and later
 
         private val SPECIFICATION_TO_XML_WS_VERSION = mapOf(
-            SpecificationVersion.EE7 to ArtifactVersion("1.0"),
-            SpecificationVersion.EE8 to ArtifactVersion("1.1"), // Inferrred from first jakarta release
-            SpecificationVersion.EE9 to ArtifactVersion("3.0"),
-            SpecificationVersion.EE9_1 to ArtifactVersion("3.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("3.0"), // Current version, no longer in API
+            SpecificationVersion.EE7 to ArtifactVersion("1.0.0"),
+            SpecificationVersion.EE8 to ArtifactVersion("1.1.0"), // Inferrred from first jakarta release
+            SpecificationVersion.EE9 to ArtifactVersion("3.0.0"),
+            SpecificationVersion.EE9_1 to ArtifactVersion("3.0.0"),
+            SpecificationVersion.EE10 to ArtifactVersion("3.0.0"), // Current version, no longer in API
         )
 
         private val JAVAX_COORDINATES = listOf(

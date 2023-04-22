@@ -38,11 +38,11 @@ internal class ExpressionLanguage : ContainerProvidedSpecification(
         private val TOMCAT_EMBED_EL = ArtifactCoordinate("org.apache.tomcat.embed", "tomcat-embed-el") // 7.0.0 and later, includes implementation
 
         private val SPECIFICATION_TO_EL_VERSION = mapOf(
-            SpecificationVersion.EE7 to ArtifactVersion("3.0"),
-            SpecificationVersion.EE8 to ArtifactVersion("3.0"),
-            SpecificationVersion.EE9 to ArtifactVersion("4.0"),
-            SpecificationVersion.EE9_1 to ArtifactVersion("4.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("5.0"),
+            SpecificationVersion.EE7 to ArtifactVersion("3.0.0"),
+            SpecificationVersion.EE8 to ArtifactVersion("3.0.0"),
+            SpecificationVersion.EE9 to ArtifactVersion("4.0.0"),
+            SpecificationVersion.EE9_1 to ArtifactVersion("4.0.0"),
+            SpecificationVersion.EE10 to ArtifactVersion("5.0.0"),
         )
 
         private val JAVAX_COORDINATES = listOf(

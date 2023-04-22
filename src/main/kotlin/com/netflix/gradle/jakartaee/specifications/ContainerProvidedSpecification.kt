@@ -36,11 +36,11 @@ internal abstract class ContainerProvidedSpecification(
 ) {
     companion object {
         internal val TOMCAT_TO_EE_VERSION = mapOf(
-            ArtifactVersion("8.0") to SpecificationVersion.EE7,
-            ArtifactVersion("8.5") to SpecificationVersion.EE7,
-            ArtifactVersion("9.0") to SpecificationVersion.EE8,
-            ArtifactVersion("10.0") to SpecificationVersion.EE9,
-            ArtifactVersion("10.1") to SpecificationVersion.EE10
+            ArtifactVersion("8.0.0") to SpecificationVersion.EE7,
+            ArtifactVersion("8.5.0") to SpecificationVersion.EE7,
+            ArtifactVersion("9.0.0") to SpecificationVersion.EE8,
+            ArtifactVersion("10.0.0") to SpecificationVersion.EE9,
+            ArtifactVersion("10.1.0") to SpecificationVersion.EE10
         )
 
         private val EE_TO_TOMCAT_VERSION = TOMCAT_TO_EE_VERSION.entries

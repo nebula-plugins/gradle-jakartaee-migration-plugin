@@ -40,11 +40,11 @@ internal class ServerPages : ContainerProvidedSpecification(
         private val TOMCAT = ArtifactCoordinate("org.apache.tomcat", "tomcat-jsp-api") // 7.0.0 and later
 
         private val SPECIFICATION_TO_JSP_VERSION = mapOf(
-            SpecificationVersion.EE7 to ArtifactVersion("2.3"),
-            SpecificationVersion.EE8 to ArtifactVersion("2.3"),
-            SpecificationVersion.EE9 to ArtifactVersion("3.0"),
-            SpecificationVersion.EE9_1 to ArtifactVersion("3.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("3.1"),
+            SpecificationVersion.EE7 to ArtifactVersion("2.3.0"),
+            SpecificationVersion.EE8 to ArtifactVersion("2.3.0"),
+            SpecificationVersion.EE9 to ArtifactVersion("3.0.0"),
+            SpecificationVersion.EE9_1 to ArtifactVersion("3.0.0"),
+            SpecificationVersion.EE10 to ArtifactVersion("3.1.0"),
         )
 
         private val JAVAX_COORDINATES = listOf(

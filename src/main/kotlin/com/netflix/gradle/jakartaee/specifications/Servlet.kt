@@ -41,11 +41,11 @@ internal class Servlet : ContainerProvidedSpecification(
         private val TOMCAT = ArtifactCoordinate("org.apache.tomcat", "tomcat-servlet-api") // 7.0.0 and later
 
         private val SPECIFICATION_TO_SERVLET_VERSION = mapOf(
-            SpecificationVersion.EE7 to ArtifactVersion("3.1"),
-            SpecificationVersion.EE8 to ArtifactVersion("4.0"),
-            SpecificationVersion.EE9 to ArtifactVersion("5.0"),
-            SpecificationVersion.EE9_1 to ArtifactVersion("5.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("6.0"),
+            SpecificationVersion.EE7 to ArtifactVersion("3.1.0"),
+            SpecificationVersion.EE8 to ArtifactVersion("4.0.0"),
+            SpecificationVersion.EE9 to ArtifactVersion("5.0.0"),
+            SpecificationVersion.EE9_1 to ArtifactVersion("5.0.0"),
+            SpecificationVersion.EE10 to ArtifactVersion("6.0.0"),
         )
 
         private val JAVAX_COORDINATES = listOf(

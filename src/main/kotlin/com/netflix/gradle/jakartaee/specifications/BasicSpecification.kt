@@ -48,7 +48,7 @@ internal abstract class BasicSpecification(
     final override fun implementationForSpecification(specificationVersion: SpecificationVersion): ArtifactVersionCoordinate {
         val defaultImplementation =
             if (specificationVersion <= SpecificationVersion.EE8) javaxCoordinate else jakartaCoordinate
-        val version = specificationToImplementationVersion[specificationVersion]!!.toString() + ".0"
+        val version = specificationToImplementationVersion[specificationVersion]!!.toString()
         return defaultImplementation.withVersion(version)
     }
 

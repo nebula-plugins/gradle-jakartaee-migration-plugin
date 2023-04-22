@@ -34,11 +34,11 @@ internal class Interceptor : BasicSpecification(
         private val JAKARTA = ArtifactCoordinate("jakarta.interceptor", "jakarta.interceptor-api") // 1.2.3 and later
 
         private val SPECIFICATION_TO_INTERCEPTOR_VERSION = mapOf(
-            SpecificationVersion.EE7 to ArtifactVersion("1.2"),
-            SpecificationVersion.EE8 to ArtifactVersion("1.2"),
-            SpecificationVersion.EE9 to ArtifactVersion("2.0"),
-            SpecificationVersion.EE9_1 to ArtifactVersion("2.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("2.1"),
+            SpecificationVersion.EE7 to ArtifactVersion("1.2.0"),
+            SpecificationVersion.EE8 to ArtifactVersion("1.2.0"),
+            SpecificationVersion.EE9 to ArtifactVersion("2.0.0"),
+            SpecificationVersion.EE9_1 to ArtifactVersion("2.0.0"),
+            SpecificationVersion.EE10 to ArtifactVersion("2.1.0"),
         )
 
         private val JAVAX_COORDINATES = listOf(

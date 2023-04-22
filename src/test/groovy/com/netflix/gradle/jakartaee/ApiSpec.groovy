@@ -103,4 +103,26 @@ $JAKARTAEE10_DEPENDENCIES
         faces[0] == 'jakarta.faces:jakarta.faces-api:4.0.1'
     }
 
+    def 'javaee-api:7 is completely substituted'() {
+        buildFile << """
+dependencies {
+$JAVAEE7_DEPENDENCIES
+}
+
+jakartaeeMigration {
+    ensureJakartaApi()
+}
+"""
+
+        expect:
+        def coordinates = resolvedRuntimeClasspathCoordinates()
+        coordinates.size() == 32
+
+        coordinates.findAll { !it.contains('jakarta') }.isEmpty()
+
+        def faces = coordinates.findAll { it.contains('faces') }
+        faces.size() == 1
+        faces[0] == 'jakarta.faces:jakarta.faces-api:3.0.0'
+    }
+
 }
