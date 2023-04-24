@@ -134,7 +134,6 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
             } catch (e: UnsupportedOperationException) {
             }
             LOGGER.info("Transformed {} to JakartaEE {}", inputFile.name, outputFile.name)
-            outputs.file(outputFile)
         } else {
             LOGGER.info("No JakartaEE transformation required for {}", inputFile.name)
             Files.delete(tempFilePath)
