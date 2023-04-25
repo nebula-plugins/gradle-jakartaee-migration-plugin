@@ -64,15 +64,14 @@ Refer to the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.netfli
 
 ### Migrate from EE 8 and earlier to EE 9 and later
 
-To enable automatic migration from EE 8 (`javax`) or earlier to EE 9 (`jakarta`) or later, enable capabilities, capability conflict resolution and transforms with `migrate()`:
+To enable automatic migration from EE 8 (`javax`) or earlier to EE 9 (`jakarta`) or later, enable all features with `migrate()`:
 ```
 jakartaeeMigration {
     migrate()
 }
 ```
 
-Alternatively, you can apply to configurations conditionally by using: 
-
+Alternatively, you can apply to configurations conditionally by using:
 ```
 configurations.all { config ->
   if (config.name != 'myLegacyConfig' && config.isCanBeResolved) {
@@ -81,9 +80,21 @@ configurations.all { config ->
 }
 ```
 
-This is most useful for standalone application projects, as transforms should be avoided for library projects. Replacement JakartaEE APIs need to be provided explicitly on the classpath and will not be automatically provided.
+This is most useful for standalone application projects, as transforms should be avoided for library projects. Replacement JakartaEE APIs need to be provided explicitly on the classpath and will not be automatically provided. 
 
-### Migrate without needing to provide JakartaEE API dependencies
+Calling `migrate` is equivalent to calling:
+```
+jakartaeeMigration {
+    configurations.all { config ->
+        resolveCapabilityConflicts(configuration)
+        substitute(config)
+        transform(config)
+    }
+    excludeSpecificationsTransform()
+}
+```
+
+### Substitute JakartaEE 9 Artifacts
 
 Call `substitute` to automatically substitute EE9 APIs for every JavaEE API currently on the configuration. This avoids having to manually provide replacement artifacts:
 ```

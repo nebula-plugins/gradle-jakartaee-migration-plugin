@@ -24,7 +24,7 @@ internal abstract class BasicSpecification(
     private val javaxCoordinate: ArtifactCoordinate,
     final override val javaxCoordinates: List<ArtifactCoordinate>,
     private val jakartaCoordinate: ArtifactCoordinate,
-    private val jakartaCoordinates: List<ArtifactCoordinate>,
+    final override val jakartaCoordinates: List<ArtifactCoordinate>,
     private val specificationToImplementationVersion: Map<SpecificationVersion, ArtifactVersion>
 ) : Specification {
 
@@ -53,10 +53,11 @@ internal abstract class BasicSpecification(
     }
 
     override fun implementationVersionFor(artifactVersion: ArtifactVersionCoordinate): ArtifactVersion {
+        // Deal with the OSGi repackaged bundles versioned 10.x
         if (artifactVersion.module.group == "org.glassfish") {
             return specificationToImplementationVersion[SpecificationVersion.EE7]!!
         }
-        return artifactVersion.version.minorVersion
+        return artifactVersion.version
     }
 
     final override fun specificationForImplementation(version: ArtifactVersion): SpecificationVersion {

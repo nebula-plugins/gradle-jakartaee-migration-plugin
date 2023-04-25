@@ -15,18 +15,16 @@
  *
  */
 
-package com.netflix.gradle.jakartaee.artifacts
+package com.netflix.gradle.jakartaee
 
-internal enum class ArtifactType {
-    API,
+abstract class AbstractCapabilitySpec extends AbstractPluginSpec {
+    def setup() {
+        buildFile << """
+apply plugin: 'java'
 
-    /**
-     * Artifact bundles both API and implementation.
-     */
-    BUNDLE,
-
-    /**
-     * Artifact is an embedded implementation, such as tomcat-embed-core.
-     */
-    EMBED
+jakartaeeMigration {
+    resolveCapabilityConflicts('runtimeClasspath')
+}
+"""
+    }
 }

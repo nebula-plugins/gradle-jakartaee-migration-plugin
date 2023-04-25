@@ -20,16 +20,17 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactType
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
+import com.netflix.gradle.jakartaee.artifacts.ArtifactVersionCoordinate
 
-internal class Json : BasicSpecification(
-    "json-api",
-    JAVAX,
-    JAKARTA,
+internal class JsonBundle : BasicSpecification(
+    "json-api-bundle",
+    JAVAX_GLASSFISH,
+    JAKARTA_GLASSFISH,
     SPECIFICATION_TO_JSON_VERSION
 ) {
     companion object {
-        private val JAVAX = ArtifactCoordinate("javax.json", "javax.json-api") // 1.0 through 1.1.4
-        private val JAKARTA = ArtifactCoordinate("jakarta.json", "jakarta.json-api") // 1.1.5 and later
+        private val JAVAX_GLASSFISH = ArtifactCoordinate("org.glassfish", "javax.json") // Bundle. 1.0 through 1.1.4
+        private val JAKARTA_GLASSFISH = ArtifactCoordinate("org.glassfish", "jakarta.json") // Bundle. 1.1.5 and later
 
         private val SPECIFICATION_TO_JSON_VERSION = mapOf(
             SpecificationVersion.EE7 to ArtifactVersion("1.0.0"),
@@ -38,5 +39,12 @@ internal class Json : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("2.0.0"),
             SpecificationVersion.EE10 to ArtifactVersion("2.1.0"),
         )
+    }
+
+    override fun artifactType(artifactCoordinate: ArtifactCoordinate): ArtifactType =
+        ArtifactType.BUNDLE
+
+    override fun implementationVersionFor(artifactVersion: ArtifactVersionCoordinate): ArtifactVersion {
+        return artifactVersion.version
     }
 }

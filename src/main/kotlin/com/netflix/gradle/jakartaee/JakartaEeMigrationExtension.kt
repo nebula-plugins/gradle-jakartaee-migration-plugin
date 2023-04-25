@@ -48,6 +48,7 @@ public open class JakartaEeMigrationExtension(
 
     private val configuredCapabilities = AtomicBoolean()
     private val registeredTransform = AtomicBoolean()
+    private val excludeSpecificationsTransform = AtomicBoolean()
     private val preventTransformOfProductionConfigurations = AtomicBoolean()
     private val productionConfigurationNames = setOf(
         JavaPlugin.API_CONFIGURATION_NAME,
@@ -91,7 +92,9 @@ public open class JakartaEeMigrationExtension(
      * @param configuration the configuration to be migrated
      */
     public fun migrate(configuration: Configuration) {
+        excludeSpecificationsTransform()
         resolveCapabilityConflicts(configuration)
+        substitute(configuration)
         transform(configuration)
     }
 
@@ -159,6 +162,17 @@ public open class JakartaEeMigrationExtension(
     }
 
     /**
+     * Transform all configurations.
+     */
+    public fun transform() {
+        configurations.all { configuration ->
+            if (configuration.name != "resolutionRules") {
+                transform(configuration)
+            }
+        }
+    }
+
+    /**
      * Transform artifacts for the given configuration name.
      *
      * @param configurationName the name of the configuration to transform
@@ -208,10 +222,12 @@ public open class JakartaEeMigrationExtension(
      * Exclude all specification artifacts from transformation.
      */
     public fun excludeSpecificationsTransform() {
-        val specificationArtifacts = Specification.SPECIFICATIONS
-            .flatMap { specification -> specification.coordinates }
-            .distinct()
-        excluded += specificationArtifacts
+        if (excludeSpecificationsTransform.compareAndSet(false, true)) {
+            val specificationArtifacts = Specification.SPECIFICATIONS
+                .flatMap { specification -> specification.coordinates }
+                .distinct()
+            excluded += specificationArtifacts
+        }
     }
 
     /**
@@ -243,5 +259,4 @@ public open class JakartaEeMigrationExtension(
             }
         }
     }
-
 }

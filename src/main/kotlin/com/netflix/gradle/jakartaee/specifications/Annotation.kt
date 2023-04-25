@@ -55,7 +55,6 @@ internal class Annotation : ContainerProvidedSpecification(
 
         private val JAKARTA_COORDINATES = listOf(
             JAKARTA,
-
         )
     }
 }

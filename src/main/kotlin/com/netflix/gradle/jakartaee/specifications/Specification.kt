@@ -44,6 +44,7 @@ internal interface Specification : ComponentMetadataRule {
             Interceptor(),
             JavaBeans(),
             Json(),
+            JsonBundle(),
             JsonBind(),
             Management(),
             Mail(),
@@ -53,6 +54,7 @@ internal interface Specification : ComponentMetadataRule {
             RestWebServices(),
             Security(),
             ServerFaces(),
+            ServerFacesBundle(),
             ServerPages(),
             Servlet(),
             StandardTagLibrary(),
@@ -83,6 +85,11 @@ internal interface Specification : ComponentMetadataRule {
      * Coordinates of known javax packages.
      */
     val javaxCoordinates: List<ArtifactCoordinate>
+
+    /**
+     * Coordinates of known jakarta packages.
+     */
+    val jakartaCoordinates: List<ArtifactCoordinate>
 
     fun implementationForSpecification(specificationVersion: SpecificationVersion): ArtifactVersionCoordinate
 
@@ -130,8 +137,8 @@ internal interface Specification : ComponentMetadataRule {
                         coordinateToOrdinal[coordinate.module]
                     }.maxBy {
                         val coordinate = it.toCoordinate()
-                        if (artifactType(coordinate.module) == ArtifactType.EMBEDDED) {
-                            details.because("Provides a bundled EE API and implementation")
+                        if (artifactType(coordinate.module) == ArtifactType.EMBED) {
+                            details.because("Provides an embedded EE API and implementation")
                             // Embedded implementations win regardless of specification/package provided
                             ArtifactVersion(Integer.MAX_VALUE.toString())
                         } else {

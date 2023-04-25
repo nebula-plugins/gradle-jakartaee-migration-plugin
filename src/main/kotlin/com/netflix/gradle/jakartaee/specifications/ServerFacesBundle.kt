@@ -20,19 +20,17 @@ package com.netflix.gradle.jakartaee.specifications
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.artifacts.ArtifactType
 import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
+import com.netflix.gradle.jakartaee.artifacts.ArtifactVersionCoordinate
 
-internal class ServerFaces : BasicSpecification(
-    "faces-api",
-    JAVAX,
-    JAVAX_COORDINATES,
-    JAKARTA,
-    JAKARTA_COORDINATES,
+internal class ServerFacesBundle : BasicSpecification(
+    "faces-api-bundle",
+    JAVAX_GLASSFISH,
+    JAKARTA_GLASSFISH,
     SPECIFICATION_TO_FACES_VERSION
 ) {
     companion object {
-        private val JAVAX_LEGACY = ArtifactCoordinate("javax.faces", "jsf-api") // 1.0 through 2.1
-        private val JAVAX = ArtifactCoordinate("javax.faces", "javax.faces-api") // 2.1 through 2.3
-        private val JAKARTA = ArtifactCoordinate("jakarta.faces", "jakarta.faces-api") // 2.3.1 and later
+        private val JAVAX_GLASSFISH = ArtifactCoordinate("org.glassfish", "javax.faces") // Bundle. 2.1.2 through 2.2.20
+        private val JAKARTA_GLASSFISH = ArtifactCoordinate("org.glassfish", "jakarta.faces") // Bundle. 2.3.9 and later
 
         private val SPECIFICATION_TO_FACES_VERSION = mapOf(
             SpecificationVersion.EE7 to ArtifactVersion("2.2.0"),
@@ -41,14 +39,9 @@ internal class ServerFaces : BasicSpecification(
             SpecificationVersion.EE9_1 to ArtifactVersion("3.0.0"),
             SpecificationVersion.EE10 to ArtifactVersion("4.0.0"),
         )
+    }
 
-        private val JAVAX_COORDINATES = listOf(
-            JAVAX_LEGACY,
-            JAVAX,
-        )
-
-        private val JAKARTA_COORDINATES = listOf(
-            JAKARTA,
-        )
+    override fun implementationVersionFor(artifactVersion: ArtifactVersionCoordinate): ArtifactVersion {
+        return artifactVersion.version
     }
 }

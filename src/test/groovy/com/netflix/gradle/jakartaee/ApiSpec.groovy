@@ -94,13 +94,15 @@ $JAKARTAEE10_DEPENDENCIES
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 38
+        coordinates.size() == 39
 
         coordinates.findAll { !it.contains('jakarta') }.isEmpty()
 
+        // Check the Faces bundle was handled correctly
         def faces = coordinates.findAll { it.contains('faces') }
-        faces.size() == 1
-        faces[0] == 'jakarta.faces:jakarta.faces-api:4.0.1'
+        faces.size() == 2
+        faces[0] == 'org.glassfish:jakarta.faces:4.0.0'
+        faces[1] == 'jakarta.faces:jakarta.faces-api:4.0.1'
     }
 
     def 'javaee-api:7 is completely substituted'() {
@@ -116,13 +118,32 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 32
+        coordinates.size() == 33
 
         coordinates.findAll { !it.contains('jakarta') }.isEmpty()
 
+        // Check the Faces bundle was handled correctly
         def faces = coordinates.findAll { it.contains('faces') }
-        faces.size() == 1
-        faces[0] == 'jakarta.faces:jakarta.faces-api:3.0.0'
+        faces.size() == 2
+        faces[0] == 'org.glassfish:jakarta.faces:3.0.0'
+        faces[1] == 'jakarta.faces:jakarta.faces-api:3.0.0'
+    }
+
+    def 'javaee-api:7 is completely substituted with embedded tomcat'() {
+        buildFile << """
+dependencies {
+$JAVAEE7_DEPENDENCIES
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:9.0.72'
+}
+
+jakartaeeMigration {
+    substitute()
+}
+"""
+
+        expect:
+        def coordinates = resolvedRuntimeClasspathCoordinates()
+        coordinates.size() == 31
     }
 
 }
