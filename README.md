@@ -86,7 +86,7 @@ Calling `migrate` is equivalent to calling:
 ```
 jakartaeeMigration {
     configurations.all { config ->
-        resolveCapabilityConflicts(configuration)
+        resolveCapabilityConflicts(config)
         substitute(config)
         transform(config)
     }
