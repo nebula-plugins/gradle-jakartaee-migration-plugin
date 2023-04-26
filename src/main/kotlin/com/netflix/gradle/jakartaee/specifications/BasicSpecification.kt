@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Netflix, Inc.
+ * Copyright 2023 Netflix, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,10 @@
 
 package com.netflix.gradle.jakartaee.specifications
 
-import com.netflix.gradle.jakartaee.artifacts.*
+import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
+import com.netflix.gradle.jakartaee.artifacts.ArtifactType
+import com.netflix.gradle.jakartaee.artifacts.ArtifactVersion
+import com.netflix.gradle.jakartaee.artifacts.ArtifactVersionCoordinate
 
 internal abstract class BasicSpecification(
     final override val name: String,
@@ -60,15 +63,7 @@ internal abstract class BasicSpecification(
         return artifactVersion.version
     }
 
-    final override fun specificationForImplementation(version: ArtifactVersion): SpecificationVersion {
-        val minorVersion = version.minorVersion
-        return implementationToSpecificationVersion[minorVersion]
-            ?: SpecificationVersion.EE7
-    }
-
-    override fun artifactType(artifactCoordinate: ArtifactCoordinate) =
-        ArtifactType.API
-
     final override val coordinates: List<ArtifactCoordinate>
         get() = javaxCoordinates + jakartaCoordinates
+
 }

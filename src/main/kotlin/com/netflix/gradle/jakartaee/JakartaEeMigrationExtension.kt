@@ -18,7 +18,7 @@
 package com.netflix.gradle.jakartaee
 
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
-import com.netflix.gradle.jakartaee.specifications.Specification
+import com.netflix.gradle.jakartaee.specifications.Specification.Companion.IMPLEMENTATIONS
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.dsl.DependencyHandler
@@ -103,7 +103,7 @@ public open class JakartaEeMigrationExtension(
      */
     public fun configureCapabilities() {
         if (configuredCapabilities.compareAndSet(false, true)) {
-            Specification.SPECIFICATIONS.forEach { specification ->
+            IMPLEMENTATIONS.forEach { specification ->
                 specification.configureCapabilities(dependencies)
             }
         }
@@ -112,7 +112,7 @@ public open class JakartaEeMigrationExtension(
     /**
      * Resolve capability conflicts for a configuration.
      *
-     * @param configuration the configuration to configure
+     * @param configurationName the configuration to configure
      */
     public fun resolveCapabilityConflicts(configurationName: String) {
         resolveCapabilityConflicts(configurations.getByName(configurationName))
@@ -125,7 +125,7 @@ public open class JakartaEeMigrationExtension(
      */
     public fun resolveCapabilityConflicts(configuration: Configuration) {
         configureCapabilities()
-        Specification.SPECIFICATIONS.forEach { specification ->
+        IMPLEMENTATIONS.forEach { specification ->
             specification.configureCapabilitiesResolution(configuration)
         }
     }
@@ -144,7 +144,7 @@ public open class JakartaEeMigrationExtension(
     /**
      * Ensure that at least an EE9 version of all used specifications are available in this configuration.
      *
-     * @param configuration the configuration to configure
+     * @param configurationName the configuration to configure
      */
     public fun substitute(configurationName: String) {
         substitute(configurations.getByName(configurationName))
@@ -156,7 +156,7 @@ public open class JakartaEeMigrationExtension(
      * @param configuration the configuration to configure
      */
     public fun substitute(configuration: Configuration) {
-        Specification.SPECIFICATIONS.forEach { specification ->
+        IMPLEMENTATIONS.forEach { specification ->
             specification.substitute(configuration)
         }
     }
@@ -223,7 +223,7 @@ public open class JakartaEeMigrationExtension(
      */
     public fun excludeSpecificationsTransform() {
         if (excludeSpecificationsTransform.compareAndSet(false, true)) {
-            val specificationArtifacts = Specification.SPECIFICATIONS
+            val specificationArtifacts = IMPLEMENTATIONS
                 .flatMap { specification -> specification.coordinates }
                 .distinct()
             excluded += specificationArtifacts

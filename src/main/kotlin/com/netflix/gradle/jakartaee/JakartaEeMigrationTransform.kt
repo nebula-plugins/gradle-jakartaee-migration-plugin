@@ -31,15 +31,9 @@ import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.work.DisableCachingByDefault
 import org.slf4j.LoggerFactory
-import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.io.FileOutputStream
 import java.io.UncheckedIOException
-import java.lang.IllegalStateException
 import java.nio.file.Files
-import java.util.jar.JarFile
-import java.util.jar.JarOutputStream
-import java.util.jar.Manifest
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord

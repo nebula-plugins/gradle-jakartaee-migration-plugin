@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Netflix, Inc.
+ * Copyright 2023 Netflix, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 package com.netflix.gradle.jakartaee.specifications
 
 import com.netflix.gradle.jakartaee.artifacts.*
+import com.netflix.gradle.jakartaee.specifications.api.Api
+import com.netflix.gradle.jakartaee.specifications.impl.Impl
 import org.gradle.api.artifacts.CacheableRule
 import org.gradle.api.artifacts.ComponentMetadataContext
 import org.gradle.api.artifacts.ComponentMetadataRule
@@ -27,48 +29,9 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 
 @CacheableRule
 internal interface Specification : ComponentMetadataRule {
-    companion object {
-        const val CAPABILITY_GROUP = "com.netflix.gradle.jakartaee"
 
-        val SPECIFICATIONS: List<Specification> = listOf(
-            Activation(),
-            Annotation(),
-            Authentication(),
-            Authorization(),
-            Batch(),
-            Cdi(),
-            Concurrent(),
-            Deploy(),
-            ExpressionLanguage(),
-            Inject(),
-            Interceptor(),
-            JavaBeans(),
-            Json(),
-            JsonBundle(),
-            JsonBind(),
-            Management(),
-            Mail(),
-            MessageService(),
-            Persistence(),
-            Resource(),
-            RestWebServices(),
-            Security(),
-            ServerFaces(),
-            ServerFacesBundle(),
-            ServerPages(),
-            Servlet(),
-            StandardTagLibrary(),
-            Transaction(),
-            Validation(),
-            WebServicesMetadata(),
-            WebSocket(),
-            WebSocketClient(),
-            XmlBind(),
-            XmlRegistry(),
-            XmlRpc(),
-            XmlSoap(),
-            XmlWebServices()
-        )
+    companion object {
+        val IMPLEMENTATIONS: List<Specification> = Api.IMPLEMENTATIONS + Impl.IMPLEMENTATIONS
     }
 
     /**
@@ -91,19 +54,13 @@ internal interface Specification : ComponentMetadataRule {
      */
     val jakartaCoordinates: List<ArtifactCoordinate>
 
-    fun implementationForSpecification(specificationVersion: SpecificationVersion): ArtifactVersionCoordinate
+    val capabilityGroup: String
+
+    fun artifactType(artifactCoordinate: ArtifactCoordinate): ArtifactType
 
     fun implementationVersionFor(artifactVersion: ArtifactVersionCoordinate): ArtifactVersion
 
-    fun specificationForImplementation(version: ArtifactVersion): SpecificationVersion
-
-    fun artifactType(artifactCoordinate: ArtifactCoordinate): ArtifactType = ArtifactType.API
-
-    fun isApiArtifact(artifactCoordinate: ArtifactCoordinate): Boolean =
-        artifactType(artifactCoordinate) == ArtifactType.API
-
-    fun isApiArtifact(artifactVersion: ArtifactVersionCoordinate): Boolean =
-        artifactType(artifactVersion.module) == ArtifactType.API
+    fun implementationForSpecification(specificationVersion: SpecificationVersion): ArtifactVersionCoordinate
 
     fun configureCapabilities(dependencies: DependencyHandler) {
         val components = dependencies.components
@@ -115,7 +72,7 @@ internal interface Specification : ComponentMetadataRule {
     override fun execute(context: ComponentMetadataContext) {
         context.details.allVariants { metadata ->
             metadata.withCapabilities {
-                it.addCapability(CAPABILITY_GROUP, name, context.details.id.version)
+                it.addCapability(capabilityGroup, name, context.details.id.version)
             }
         }
     }
@@ -124,7 +81,7 @@ internal interface Specification : ComponentMetadataRule {
         val coordinateToOrdinal = coordinates
             .mapIndexed { index: Int, coordinate: ArtifactCoordinate -> coordinate to index }
             .toMap()
-        val capability = "${CAPABILITY_GROUP}:${name}"
+        val capability = "${capabilityGroup}:${name}"
         configuration.resolutionStrategy
             .capabilitiesResolution
             .withCapability(capability) { details ->
@@ -156,7 +113,7 @@ internal interface Specification : ComponentMetadataRule {
             val to = substitution.module(jakartaImplementation.notation)
             javaxCoordinates.forEach { coordinate ->
                 val from = substitution.module(coordinate.notation)
-                substitution.substitute(from).using(to).because("JakartaEE API artifacts are required")
+                substitution.substitute(from).using(to).because("At least Jakarta EE 9 is required")
             }
         }
     }

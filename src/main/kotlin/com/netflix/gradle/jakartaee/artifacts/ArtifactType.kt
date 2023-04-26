@@ -28,5 +28,10 @@ internal enum class ArtifactType {
     /**
      * Artifact is an embedded implementation, such as tomcat-embed-core.
      */
-    EMBED
+    EMBED,
+
+    /**
+     * Artifact is an implementation, and does not contain the API.
+     */
+    IMPL
 }

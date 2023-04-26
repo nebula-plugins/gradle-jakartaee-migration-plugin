@@ -16,6 +16,16 @@ Provides Gradle capabilities, transforms and dependency substitutions to ease th
 - Compatible with Gradle 4.0 and later
 - [Dependency Substitutions](https://docs.gradle.org/current/userguide/resolution_rules.html#sec:dependency_substitution_rules) allow `javax` specifications to be automaticallly substituted for a JakartaEE version, avoiding having to configure replacements on the classpath
 
+### Supported Artifacts
+
+Only EE API artifacts are covered by this plugin, except for specific exceptions. The implementations are a concern of either the container or application, and any conflicts should be resolved manually.
+
+The concrete implementations supported by the plugin features are:  
+
+- Embedded container artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` that contain both API and implementation
+- The `json` and `faces` implementations, because they are provided by the specification
+- JAXB because of its extensive use as a library dependency
+
 ### Capabilities
 
 Capabilities are configured for every [EE specification](src/main/kotlin/com/netflix/gradle/jakartaee/specifications). They require that only one artifact provide a given EE specification API:   
@@ -29,8 +39,7 @@ Cannot select module with conflict on capability 'com.netflix.gradle.jakartaee:s
 The default capability resolution strategy is to select the artifact that provides the highest version of the specification, with special handling for certain types of artifacts:
 
 - Tomcat and GlassFish release versions, which use their own version scheme, are translated from release version to specification version
-- Embedded container artifacts such as `org.apache.tomcat.embed:tomcat-embed-core` that contain both the EE API and implementation are selected regardless of specification version provided 
-- Bundled artifacts such as `org.glassfish:jakarta.json`  that contain both the EE API and implementation are preferred over their non-bundled counterparts, but obey conflict/capability resolution
+- Embedded container artifacts are selected regardless of the specification version they provide
 
 ### Artifact Transforms
 
