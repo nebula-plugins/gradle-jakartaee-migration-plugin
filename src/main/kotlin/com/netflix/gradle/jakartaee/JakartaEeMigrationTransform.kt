@@ -97,7 +97,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
     override fun transform(outputs: TransformOutputs) {
         val inputFile = getInputArtifact().get().asFile
         if (!inputFile.exists()) {
-            throw UncheckedIOException(FileNotFoundException(inputFile.absolutePath))
+            throw UncheckedIOException(FileNotFoundException(inputFile.absolutePath + " does not exist. See https://github.com/nebula-plugins/gradle-jakartaee-migration-plugin/issues/7 for potential causes"))
         }
         if (includedPaths.isNotEmpty() && includedPaths.none { inputFile.invariantSeparatorsPath.contains(it) }) {
             LOGGER.debug("Skipping JakartaEE transform for {}, path is not included", inputFile)
