@@ -109,7 +109,7 @@ internal interface Specification : ComponentMetadataRule {
 
     fun substitute(configuration: Configuration) {
         configuration.resolutionStrategy.dependencySubstitution { substitution ->
-            val jakartaImplementation = implementationForSpecification(SpecificationVersion.EE9)
+            val jakartaImplementation = implementationForSpecification(SpecificationVersion.EE10)
             val to = substitution.module(jakartaImplementation.notation)
             javaxCoordinates.forEach { coordinate ->
                 val from = substitution.module(coordinate.notation)

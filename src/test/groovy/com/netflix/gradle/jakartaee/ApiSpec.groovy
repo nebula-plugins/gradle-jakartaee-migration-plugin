@@ -118,15 +118,15 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 33
+        coordinates.size() == 34
 
         coordinates.findAll { !it.contains('jakarta') }.isEmpty()
 
         // Check the Faces bundle was handled correctly
         def faces = coordinates.findAll { it.contains('faces') }
         faces.size() == 2
-        faces[0] == 'org.glassfish:jakarta.faces:3.0.0'
-        faces[1] == 'jakarta.faces:jakarta.faces-api:3.0.0'
+        faces[0] == 'org.glassfish:jakarta.faces:4.0.0'
+        faces[1] == 'jakarta.faces:jakarta.faces-api:4.0.1'
     }
 
     def 'javaee-api:7 is completely substituted with embedded tomcat'() {
@@ -143,7 +143,7 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 31
+        coordinates.size() == 32
     }
 
 }

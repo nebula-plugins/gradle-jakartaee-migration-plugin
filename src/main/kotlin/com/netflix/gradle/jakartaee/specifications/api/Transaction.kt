@@ -40,7 +40,7 @@ internal class Transaction : BasicApi(
             SpecificationVersion.EE8 to ArtifactVersion("1.3.3"),
             SpecificationVersion.EE9 to ArtifactVersion("2.0.0"),
             SpecificationVersion.EE9_1 to ArtifactVersion("2.0.0"),
-            SpecificationVersion.EE10 to ArtifactVersion("2.0.0"),
+            SpecificationVersion.EE10 to ArtifactVersion("2.0.1"),
         )
 
         private val JAVAX_COORDINATES = listOf(

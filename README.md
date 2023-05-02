@@ -71,9 +71,9 @@ Refer to the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.netfli
 
 ## Configuring the Plugin
 
-### Migrate from EE 8 and earlier to EE 9 and later
+### Migrate from EE 8 and earlier to EE 10
 
-To enable automatic migration from EE 8 (`javax`) or earlier to EE 9 (`jakarta`) or later, enable all features with `migrate()`:
+To enable automatic migration from EE 8 (`javax`) or earlier to EE 10 (`jakarta`) or later, enable all features with `migrate()`:
 ```
 jakartaeeMigration {
     migrate()
@@ -103,9 +103,9 @@ jakartaeeMigration {
 }
 ```
 
-### Substitute JakartaEE 9 Artifacts
+### Substitute JakartaEE 10 Artifacts
 
-Call `substitute` to automatically substitute EE9 APIs for every JavaEE API currently on the configuration. This avoids having to manually provide replacement artifacts:
+Call `substitute` to automatically substitute EE10 APIs for every JavaEE API currently on the configuration. This avoids having to manually provide replacement artifacts:
 ```
 jakartaeeMigration {
     substitute()
@@ -114,7 +114,7 @@ jakartaeeMigration {
 
 This does not affect conflict resolution to higher versions or capabilities resolution between `jakarta` artifacts, and can be combined with `migrate` or any other option.
 
-This is useful where upstream library projects are still targeting `javax` and it's undesirable to add replacement artifacts everywhere those projects consumed.
+This is useful where upstream library projects are still targeting `javax` and it's undesirable to add replacement artifacts everywhere those projects consumed. EE 10 is used as a baseline for [Spring Boot 3 compatibility](https://github.com/spring-projects/spring-boot/issues/33661#issuecomment-1368218308).
 
 ### Configure Only Capabilities
 

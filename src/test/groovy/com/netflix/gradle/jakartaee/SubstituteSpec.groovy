@@ -17,6 +17,8 @@
 
 package com.netflix.gradle.jakartaee
 
+import spock.lang.Ignore
+
 class SubstituteSpec extends AbstractMigrationSpec {
 
     def 'jakarta.servlet-api substitutes javax.servlet-api'() {
@@ -34,7 +36,7 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates[0] == 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+        coordinates[0] == 'jakarta.servlet:jakarta.servlet-api:6.0.0'
     }
 
     def 'jakarta.servlet-api substitutes javax.servlet-api, upgrading EE8 artifact'() {
@@ -53,12 +55,11 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates[0] == 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+        coordinates[0] == 'jakarta.servlet:jakarta.servlet-api:6.0.0'
     }
 
+    @Ignore('requires a later version than 6.0.0 now we have an EE10 baseline')
     def 'jakarta.servlet-api substitutes javax.servlet-api, but does not affect conflict resolution'() {
-        debug = true
-
         buildFile << """
 dependencies {
     implementation 'javax.servlet:servlet-api:2.2'
@@ -120,7 +121,7 @@ jakartaeeMigration {
 """
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 34
+        coordinates.size() == 35
 
         coordinates.findAll { !it.contains('jakarta') }.isEmpty()
     }

@@ -131,7 +131,7 @@ public open class JakartaEeMigrationExtension(
     }
 
     /**
-     * Ensure that at least an EE9 version of all used specifications are available in all configurations.
+     * Ensure that at least an EE10 version of all used specifications are available in all configurations.
      */
     public fun substitute() {
         configurations.all { configuration ->
@@ -142,7 +142,7 @@ public open class JakartaEeMigrationExtension(
     }
 
     /**
-     * Ensure that at least an EE9 version of all used specifications are available in this configuration.
+     * Ensure that at least an EE10 version of all used specifications are available in this configuration.
      *
      * @param configurationName the configuration to configure
      */
@@ -151,7 +151,7 @@ public open class JakartaEeMigrationExtension(
     }
 
     /**
-     * Ensure that at least an EE9 version of all used specifications are available in this configuration.
+     * Ensure that at least an EE10g version of all used specifications are available in this configuration.
      *
      * @param configuration the configuration to configure
      */
