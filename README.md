@@ -73,14 +73,14 @@ Refer to the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.netfli
 
 ### Migrate from EE 8 and earlier to EE 10
 
-To enable automatic migration from EE 8 (`javax`) or earlier to EE 10 (`jakarta`) or later, enable all features with `migrate()`:
+To enable automatic migration from EE 8 (`javax`) or earlier to EE 10 (`jakarta`) or later, enable all features with `migrate(project)`:
 ```
 jakartaeeMigration {
-    migrate()
+    migrate(project)
 }
 ```
 
-Alternatively, you can apply to configurations conditionally by using:
+This configures migration for all Java sourceset classpath configurations. Alternatively, you can apply to all configurations with `migrate()` or configurations conditionally by using:
 ```
 configurations.all { config ->
   if (config.name != 'myLegacyConfig' && config.isCanBeResolved) {

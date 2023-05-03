@@ -19,12 +19,14 @@ package com.netflix.gradle.jakartaee
 
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.specifications.Specification.Companion.IMPLEMENTATIONS
+import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.ConfigurationContainer
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.api.attributes.Attribute
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.plugins.JavaPluginExtension
 import java.util.concurrent.atomic.AtomicBoolean
 
 public open class JakartaEeMigrationExtension(
@@ -74,6 +76,27 @@ public open class JakartaEeMigrationExtension(
             if (configuration.name != "resolutionRules") {
                 migrate(configuration)
             }
+        }
+    }
+
+    /**
+     * Enable migration for all sourceset classpath configurations.
+     */
+    public fun migrate(project: Project) {
+        val javaExtension = project.extensions.getByType(JavaPluginExtension::class.java)
+        javaExtension.sourceSets.configureEach { sourceSet ->
+            listOf(
+                sourceSet.apiConfigurationName,
+                sourceSet.compileOnlyApiConfigurationName,
+                sourceSet.compileOnlyConfigurationName,
+                sourceSet.compileClasspathConfigurationName,
+                sourceSet.implementationConfigurationName,
+                sourceSet.runtimeClasspathConfigurationName,
+                sourceSet.runtimeOnlyConfigurationName,
+            ).mapNotNull { project.configurations.findByName(it) }
+                .forEach {
+                    migrate(it)
+                }
         }
     }
 
