@@ -65,6 +65,12 @@ public open class JakartaEeMigrationExtension(
             { it.runtimeOnlyConfigurationName },
             { it.runtimeClasspathConfigurationName },
         )
+
+        private val SPRING_BOOT_CONFIGURATION_NAMES = listOf(
+            "developmentOnly",
+            "productionRuntime",
+            "processAotClasspath",
+            "processTestAotClasspath")
     }
 
     private val configuredCapabilities = AtomicBoolean()
@@ -99,6 +105,13 @@ public open class JakartaEeMigrationExtension(
                 if (configurationNames.contains(configuration.name)) {
                     migrate(configuration)
                 }
+            }
+        }
+        project.configurations.configureEach {configuration ->
+            if (SPRING_BOOT_CONFIGURATION_NAMES.contains(configuration.name)) {
+                migrate(configuration)
+            } else if (configuration.name.endsWith("ProtoPath")) {
+                migrate(configuration)
             }
         }
     }
