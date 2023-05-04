@@ -68,7 +68,7 @@ public open class JakartaEeMigrationExtension(
 
         private val SPRING_BOOT_CONFIGURATION_NAMES = listOf(
             "developmentOnly",
-            "productionRuntime",
+            "productionRuntimeClasspath",
             "processAotClasspath",
             "processTestAotClasspath")
     }
