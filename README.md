@@ -80,7 +80,7 @@ jakartaeeMigration {
 }
 ```
 
-This configures migration for all Java sourceset classpath configurations. 
+This configures migration for all Java sourceset classpath configurations, Spring Boot production and development-only configurations, and Protobuf plugin configurations.
 
 Calling `migrate` on a `java` project is equivalent to calling:
 ```
