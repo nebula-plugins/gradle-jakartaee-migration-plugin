@@ -91,22 +91,21 @@ public open class JakartaEeMigrationExtension(
      * Enable automatic migration.
      */
     public fun migrate() {
-        excludeSpecificationsTransform()
         val javaExtension = project.extensions.findByType(JavaPluginExtension::class.java)
         check(javaExtension != null) { "The Java plugin extension is not present on this project" }
         javaExtension.sourceSets.configureEach { sourceSet ->
             val configurationNames = CLASSPATH_NAME_ACCESSORS.map { it(sourceSet) }
             project.configurations.configureEach { configuration ->
                 if (configurationNames.contains(configuration.name)) {
-                    migrate(configuration)
+                    migrate(configuration, true)
                 }
             }
         }
         project.configurations.configureEach {configuration ->
             if (SPRING_BOOT_CONFIGURATION_NAMES.contains(configuration.name)) {
-                migrate(configuration)
+                migrate(configuration, true)
             } else if (configuration.name.endsWith("ProtoPath")) {
-                migrate(configuration)
+                migrate(configuration, true)
             }
         }
     }
@@ -126,9 +125,15 @@ public open class JakartaEeMigrationExtension(
      * @param configuration the configuration to be migrated
      */
     public fun migrate(configuration: Configuration) {
-        excludeSpecificationsTransform()
-        resolveCapabilityConflicts(configuration)
+        migrate(configuration, false)
+    }
+
+    private fun migrate(configuration: Configuration, resolveConflicts: Boolean) {
+        if (resolveConflicts) {
+            resolveCapabilityConflicts(configuration)
+        }
         substitute(configuration)
+        excludeSpecificationsTransform()
         transform(configuration)
     }
 
