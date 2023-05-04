@@ -93,11 +93,14 @@ public open class JakartaEeMigrationExtension(
             configureCapabilities()
             return
         }
-        javaExtension.sourceSets
-            .flatMap { sourceSet ->
-                CLASSPATH_NAME_ACCESSORS.map { it(sourceSet) }
-            }.mapNotNull { configurations.findByName(it) }
-            .forEach(this::migrate)
+        javaExtension.sourceSets.configureEach { sourceSet ->
+            val configurationNames = CLASSPATH_NAME_ACCESSORS.map { it(sourceSet) }
+            project.configurations.configureEach { configuration ->
+                if (configurationNames.contains(configuration.name)) {
+                    migrate(configuration)
+                }
+            }
+        }
     }
 
     /**
