@@ -80,7 +80,7 @@ jakartaeeMigration {
 }
 ```
 
-This configures migration for all Java sourceset classpath configurations, Spring Boot production, development-only and AOT processing configurations, and Protobuf plugin configurations.
+This configures migration for all Java sourceset classpath configurations, Spring Boot production, development-only and AOT processing configurations, and Protobuf plugin configurations. Capability conflicts are registered, so any configurations that are not included will need to have conflicts resolved manually with excludes, or using the additional methods below.
 
 Calling `migrate` on a `java` project is equivalent to calling:
 ```
