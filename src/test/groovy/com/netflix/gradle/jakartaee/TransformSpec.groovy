@@ -70,7 +70,6 @@ jakartaeeMigration {
         files.findAll { it.path.contains("/caches/transforms-") }.isEmpty()
     }
 
-
     def 'artifacts can be included'() {
         buildFile << """
 dependencies {

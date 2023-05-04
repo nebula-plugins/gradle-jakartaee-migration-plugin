@@ -73,25 +73,16 @@ Refer to the [Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.netfli
 
 ### Migrate from EE 8 and earlier to EE 10
 
-To enable automatic migration from EE 8 (`javax`) or earlier to EE 10 (`jakarta`) or later, enable all features with `migrate(project)`:
+To enable automatic migration from EE 8 (`javax`) or earlier to EE 10 (`jakarta`) or later, enable all features with `migrate()`:
 ```
 jakartaeeMigration {
-    migrate(project)
+    migrate()
 }
 ```
 
-This configures migration for all Java sourceset classpath configurations. Alternatively, you can apply to all configurations with `migrate()` or configurations conditionally by using:
-```
-configurations.all { config ->
-  if (config.name != 'myLegacyConfig' && config.isCanBeResolved) {
-    jakartaeeMigration.migrate(config)  
-  }
-}
-```
+This configures migration for all Java sourceset classpath configurations. 
 
-This is most useful for standalone application projects, as transforms should be avoided for library projects. Replacement JakartaEE APIs need to be provided explicitly on the classpath and will not be automatically provided. 
-
-Calling `migrate` is equivalent to calling:
+Calling `migrate` on a `java` project is equivalent to calling:
 ```
 jakartaeeMigration {
     configurations.all { config ->
@@ -102,6 +93,8 @@ jakartaeeMigration {
     excludeSpecificationsTransform()
 }
 ```
+
+If the `java-library` plugin is applied, only capabilities are configured, leaving substitutions, transforms and capabilities resolution as an opt-in per configuration.
 
 ### Substitute JakartaEE 10 Artifacts
 

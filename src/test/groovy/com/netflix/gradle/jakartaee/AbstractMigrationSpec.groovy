@@ -23,7 +23,7 @@ abstract class AbstractMigrationSpec extends AbstractPluginSpec {
 apply plugin: 'java'
 
 jakartaeeMigration {
-    migrate(project)
+    migrate()
 }
 """
     }

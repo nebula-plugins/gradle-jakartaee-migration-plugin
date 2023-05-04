@@ -23,9 +23,7 @@ class PluginSpec extends AbstractPluginSpec {
         runTasks('help')
     }
 
-    def 'migration can be enabled when it is the only plugin applied'() {
-        // there are no configurations so we expect this to do nothing
-
+    def 'migration fails to apply if java plugin is not applied'() {
         buildFile << """
 jakartaeeMigration {
     migrate()
@@ -33,7 +31,7 @@ jakartaeeMigration {
 """
 
         expect:
-        runTasks('help')
+        runTasksAndFail('help')
     }
 
     def 'enabling transform without the jvm ecosystem plugin does not fail'() {

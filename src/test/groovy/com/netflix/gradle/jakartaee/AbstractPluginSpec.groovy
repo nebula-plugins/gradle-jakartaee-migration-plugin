@@ -28,6 +28,8 @@ plugins {
 }
 
 tasks.register('resolveRuntimeClasspath') {
+    inputs.files(configurations.runtimeClasspath)
+
     doFirst {
         def runtimeClasspath = configurations.findByName('runtimeClasspath')
         if (!runtimeClasspath) {

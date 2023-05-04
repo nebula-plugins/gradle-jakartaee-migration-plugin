@@ -25,13 +25,27 @@ apply plugin: 'java'
 
 jakartaeeMigration {
     preventTransformsOfProductionConfigurations()
-    migrate()
+    transform(configurations.implementation)
 }
 """
 
         expect:
         def result = resolvedRuntimeClasspathFailureResult()
-        result.output.contains('Use of transforms on production configurations is not allowed (configuration: compileClasspath)')
+        result.output.contains('Use of transforms on production configurations is not allowed (configuration: implementation)')
+    }
+
+    def 'migrating java-library does not apply transforms to production configurations'() {
+        buildFile << """
+apply plugin: 'java-library'
+
+jakartaeeMigration {
+    preventTransformsOfProductionConfigurations()
+    migrate()
+}
+"""
+
+        expect:
+        resolvedRuntimeClasspathResult()
     }
 
 }

@@ -21,17 +21,16 @@ import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.specifications.Specification.Companion.IMPLEMENTATIONS
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.artifacts.ConfigurationContainer
-import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.api.attributes.Attribute
+import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.tasks.SourceSet
 import java.util.concurrent.atomic.AtomicBoolean
 
 public open class JakartaEeMigrationExtension(
-    private val configurations: ConfigurationContainer,
-    private val dependencies: DependencyHandler
+    private val project: Project,
 ) {
     private companion object {
         // Gradle's ArtifactTypeDefinition doesn't have this until 7.3
@@ -46,58 +45,59 @@ public open class JakartaEeMigrationExtension(
             "org.apache.groovy:groovy",
             "org.apache.groovy:groovy-all",
         )
+
+        private val PRODUCTION_CONFIGURATION_NAMES = setOf(
+            JavaPlugin.API_CONFIGURATION_NAME,
+            JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
+            JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
+            JavaPlugin.COMPILE_ONLY_API_CONFIGURATION_NAME,
+            JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME,
+            JavaPlugin.RUNTIME_ONLY_CONFIGURATION_NAME,
+            JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME,
+        )
+
+        private val CLASSPATH_NAME_ACCESSORS = setOf<(SourceSet) -> String>(
+            { it.apiConfigurationName },
+            { it.implementationConfigurationName },
+            { it.compileOnlyConfigurationName },
+            { it.compileOnlyApiConfigurationName },
+            { it.compileClasspathConfigurationName },
+            { it.runtimeOnlyConfigurationName },
+            { it.runtimeClasspathConfigurationName },
+        )
     }
 
     private val configuredCapabilities = AtomicBoolean()
     private val registeredTransform = AtomicBoolean()
     private val excludeSpecificationsTransform = AtomicBoolean()
     private val preventTransformOfProductionConfigurations = AtomicBoolean()
-    private val productionConfigurationNames = setOf(
-        JavaPlugin.API_CONFIGURATION_NAME,
-        JavaPlugin.IMPLEMENTATION_CONFIGURATION_NAME,
-        JavaPlugin.COMPILE_ONLY_CONFIGURATION_NAME,
-        JavaPlugin.COMPILE_ONLY_API_CONFIGURATION_NAME,
-        JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME,
-        JavaPlugin.RUNTIME_ONLY_CONFIGURATION_NAME,
-        JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME,
-    )
     private val included = mutableListOf<ArtifactCoordinate>()
     private val excluded = mutableListOf<ArtifactCoordinate>()
+
+    private val configurations = project.configurations
+    private val dependencies = project.dependencies
 
     init {
         ARTIFACTS_WITH_INTENTIONAL_JAVAX.forEach(::excludeTransform)
     }
 
     /**
-     * Enable migration for all configurations.
+     * Enable automatic migration.
      */
     public fun migrate() {
-        configurations.all { configuration ->
-            if (configuration.name != "resolutionRules") {
-                migrate(configuration)
-            }
+        excludeSpecificationsTransform()
+        val javaExtension = project.extensions.findByType(JavaPluginExtension::class.java)
+        check(javaExtension != null) { "The Java plugin extension is not present on this project" }
+        val isJavaLibrary = project.plugins.hasPlugin(JavaLibraryPlugin::class.java)
+        if (isJavaLibrary) {
+            configureCapabilities()
+            return
         }
-    }
-
-    /**
-     * Enable migration for all sourceset classpath configurations.
-     */
-    public fun migrate(project: Project) {
-        val javaExtension = project.extensions.getByType(JavaPluginExtension::class.java)
-        javaExtension.sourceSets.configureEach { sourceSet ->
-            listOf(
-                sourceSet.apiConfigurationName,
-                sourceSet.compileOnlyApiConfigurationName,
-                sourceSet.compileOnlyConfigurationName,
-                sourceSet.compileClasspathConfigurationName,
-                sourceSet.implementationConfigurationName,
-                sourceSet.runtimeClasspathConfigurationName,
-                sourceSet.runtimeOnlyConfigurationName,
-            ).mapNotNull { project.configurations.findByName(it) }
-                .forEach {
-                    migrate(it)
-                }
-        }
+        javaExtension.sourceSets
+            .flatMap { sourceSet ->
+                CLASSPATH_NAME_ACCESSORS.map { it(sourceSet) }
+            }.mapNotNull { configurations.findByName(it) }
+            .forEach(this::migrate)
     }
 
     /**
@@ -213,7 +213,7 @@ public open class JakartaEeMigrationExtension(
         if (registeredTransform.compareAndSet(false, true)) {
             registerTransform()
         }
-        if (preventTransformOfProductionConfigurations.get() && productionConfigurationNames.contains(configuration.name)) {
+        if (preventTransformOfProductionConfigurations.get() && PRODUCTION_CONFIGURATION_NAMES.contains(configuration.name)) {
             throw IllegalStateException("Use of transforms on production configurations is not allowed (configuration: ${configuration.name})")
         }
         configuration.attributes.attribute(JAKARTAEE_ATTRIBUTE, true)

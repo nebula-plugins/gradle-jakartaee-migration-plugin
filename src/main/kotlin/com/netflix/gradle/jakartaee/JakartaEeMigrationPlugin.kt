@@ -25,8 +25,7 @@ public class JakartaEeMigrationPlugin : Plugin<Project> {
         project.extensions.create(
             "jakartaeeMigration",
             JakartaEeMigrationExtension::class.java,
-            project.configurations,
-            project.dependencies
+            project,
         )
     }
 }
