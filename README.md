@@ -94,8 +94,6 @@ jakartaeeMigration {
 }
 ```
 
-If the `java-library` plugin is applied, only capabilities are configured, leaving substitutions, transforms and capabilities resolution as an opt-in per configuration.
-
 ### Substitute JakartaEE 10 Artifacts
 
 Call `substitute` to automatically substitute EE10 APIs for every JavaEE API currently on the configuration. This avoids having to manually provide replacement artifacts:

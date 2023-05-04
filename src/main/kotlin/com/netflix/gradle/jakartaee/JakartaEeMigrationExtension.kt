@@ -94,11 +94,6 @@ public open class JakartaEeMigrationExtension(
         excludeSpecificationsTransform()
         val javaExtension = project.extensions.findByType(JavaPluginExtension::class.java)
         check(javaExtension != null) { "The Java plugin extension is not present on this project" }
-        val isJavaLibrary = project.plugins.hasPlugin(JavaLibraryPlugin::class.java)
-        if (isJavaLibrary) {
-            configureCapabilities()
-            return
-        }
         javaExtension.sourceSets.configureEach { sourceSet ->
             val configurationNames = CLASSPATH_NAME_ACCESSORS.map { it(sourceSet) }
             project.configurations.configureEach { configuration ->
