@@ -54,6 +54,7 @@ public open class JakartaEeMigrationExtension(
             JavaPlugin.COMPILE_CLASSPATH_CONFIGURATION_NAME,
             JavaPlugin.RUNTIME_ONLY_CONFIGURATION_NAME,
             JavaPlugin.RUNTIME_CLASSPATH_CONFIGURATION_NAME,
+            JavaPlugin.RUNTIME_ELEMENTS_CONFIGURATION_NAME
         )
 
         private val CLASSPATH_NAME_ACCESSORS = setOf<(SourceSet) -> String>(
@@ -64,6 +65,7 @@ public open class JakartaEeMigrationExtension(
             { it.compileClasspathConfigurationName },
             { it.runtimeOnlyConfigurationName },
             { it.runtimeClasspathConfigurationName },
+            { it.runtimeElementsConfigurationName }
         )
 
         private val SPRING_BOOT_CONFIGURATION_NAMES = listOf(
