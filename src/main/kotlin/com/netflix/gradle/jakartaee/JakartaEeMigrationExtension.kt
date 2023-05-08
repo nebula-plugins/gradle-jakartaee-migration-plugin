@@ -23,7 +23,6 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.api.attributes.Attribute
-import org.gradle.api.plugins.JavaLibraryPlugin
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.SourceSet
@@ -73,6 +72,15 @@ public open class JakartaEeMigrationExtension(
             "productionRuntimeClasspath",
             "processAotClasspath",
             "processTestAotClasspath")
+
+        private val PROTOPATH_SUFFIX = "ProtoPath"
+
+        private val KOTLIN_DEPENDENCIES_METADATA_SUFFIX = "DependenciesMetadata"
+
+        private val INCLUDED_SUFFIXES = listOf(
+            PROTOPATH_SUFFIX,
+            KOTLIN_DEPENDENCIES_METADATA_SUFFIX
+        )
     }
 
     private val configuredCapabilities = AtomicBoolean()
@@ -106,7 +114,7 @@ public open class JakartaEeMigrationExtension(
         project.configurations.configureEach {configuration ->
             if (SPRING_BOOT_CONFIGURATION_NAMES.contains(configuration.name)) {
                 migrate(configuration, true)
-            } else if (configuration.name.endsWith("ProtoPath")) {
+            } else if (INCLUDED_SUFFIXES.any { configuration.name.endsWith(it) }) {
                 migrate(configuration, true)
             }
         }
