@@ -19,7 +19,13 @@ package com.netflix.gradle.jakartaee
 
 import spock.lang.Ignore
 
-class SubstituteSpec extends AbstractMigrationSpec {
+class SubstituteSpec extends AbstractPluginSpec {
+
+    def setup() {
+        buildFile << """
+apply plugin: 'java'
+"""
+    }
 
     def 'jakarta.servlet-api substitutes javax.servlet-api'() {
         debug = true
