@@ -113,7 +113,7 @@ internal interface Specification : ComponentMetadataRule {
             val to = substitution.module(jakartaImplementation.notation)
             javaxCoordinates.forEach { coordinate ->
                 val from = substitution.module(coordinate.notation)
-                substitution.substitute(from).using(to).because("At least Jakarta EE 9 is required")
+                substitution.substitute(from).using(to).because("At least Jakarta EE 10 is required")
             }
         }
     }

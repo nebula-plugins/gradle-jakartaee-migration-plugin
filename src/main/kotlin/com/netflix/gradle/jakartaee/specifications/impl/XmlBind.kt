@@ -68,9 +68,9 @@ internal class XmlBind : BasicImpl(
                 val moduleIdentifier = requested.moduleIdentifier
                 val coordinate = ArtifactCoordinate(moduleIdentifier.group, moduleIdentifier.name)
                     .withVersion(requested.version)
-                val minVersion = SPECIFICATION_TO_XML_BIND_VERSION[SpecificationVersion.EE9]!!
+                val minVersion = SPECIFICATION_TO_XML_BIND_VERSION[SpecificationVersion.EE10]!!
                 if (coordinates.contains(coordinate.module) && coordinate.version < minVersion) {
-                    val message = "At least Jakarta EE 9 is required"
+                    val message = "At least Jakarta EE 10 is required"
                     val target = coordinate.module.withVersion(minVersion)
                     details.useTarget(target.notation, message)
                 }

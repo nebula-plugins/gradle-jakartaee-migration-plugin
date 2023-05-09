@@ -200,7 +200,7 @@ public open class JakartaEeMigrationExtension(
     }
 
     /**
-     * Ensure that at least an EE10g version of all used specifications are available in this configuration.
+     * Ensure that at least an EE10 version of all used specifications are available in this configuration.
      *
      * @param configuration the configuration to configure
      */
