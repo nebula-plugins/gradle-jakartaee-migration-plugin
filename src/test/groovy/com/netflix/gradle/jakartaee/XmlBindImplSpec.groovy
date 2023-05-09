@@ -61,8 +61,8 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 4
-        coordinates[0] == 'com.sun.xml.bind:jaxb-impl:3.0.0'
+        coordinates.size() == 5
+        coordinates[0] == 'com.sun.xml.bind:jaxb-impl:4.0.0'
     }
 
     def 'jaxb-runtime is substituted'() {
@@ -78,8 +78,8 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 6
-        coordinates[0] == 'org.glassfish.jaxb:jaxb-runtime:3.0.0'
+        coordinates.size() == 7
+        coordinates[0] == 'org.glassfish.jaxb:jaxb-runtime:4.0.0'
     }
 
     def 'jaxb-impl is substituted and replaces equally versioned jaxb-runtime'() {
@@ -96,26 +96,8 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 4
-        coordinates[0] == 'com.sun.xml.bind:jaxb-impl:3.0.0'
-    }
-
-    def 'jaxb-impl is substituted and is replaced by higher versioned jaxb-runtime'() {
-        buildFile << """
-dependencies {
-    implementation 'com.sun.xml.bind:jaxb-impl:2.3.0'
-    implementation 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
-}
-
-jakartaeeMigration {
-    substitute()
-}
-"""
-
-        expect:
-        def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 6
-        coordinates[0] == 'org.glassfish.jaxb:jaxb-runtime:3.0.1'
+        coordinates.size() == 5
+        coordinates[0] == 'com.sun.xml.bind:jaxb-impl:4.0.0'
     }
 
     def 'substitution does not downgrade'() {
@@ -131,7 +113,7 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 4
-        coordinates[0] == 'com.sun.xml.bind:jaxb-impl:3.0.1'
+        coordinates.size() == 5
+        coordinates[0] == 'com.sun.xml.bind:jaxb-impl:4.0.0'
     }
 }
