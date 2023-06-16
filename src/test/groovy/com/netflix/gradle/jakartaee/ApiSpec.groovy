@@ -94,9 +94,9 @@ $JAKARTAEE10_DEPENDENCIES
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 39
+        coordinates.size() == 41
 
-        coordinates.findAll { !it.contains('jakarta') }.isEmpty()
+        coordinates.findAll { it.contains('javax') }.isEmpty()
 
         // Check the Faces bundle was handled correctly
         def faces = coordinates.findAll { it.contains('faces') }
@@ -118,9 +118,9 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 34
+        coordinates.size() == 36
 
-        coordinates.findAll { !it.contains('jakarta') }.isEmpty()
+        coordinates.findAll { it.contains('javax') }.isEmpty()
 
         // Check the Faces bundle was handled correctly
         def faces = coordinates.findAll { it.contains('faces') }
@@ -143,7 +143,7 @@ jakartaeeMigration {
 
         expect:
         def coordinates = resolvedRuntimeClasspathCoordinates()
-        coordinates.size() == 32
+        coordinates.size() == 34
     }
 
 }

@@ -30,11 +30,8 @@ internal class Activation : BasicApi(
     SPECIFICATION_TO_ACTIVATION_VERSION
 ) {
     companion object {
-        private val GLASSFISH = ArtifactCoordinate("org.glassfish", "javax.activation") // Repackaged OSGi bundle, appears to be EE 6
-        private val JAVAX_1 = ArtifactCoordinate("javax.activation", "activation") // 1.0.2 through 1.1.1. jaf:activation relocates here
         private val SUN_JAVAX = ArtifactCoordinate("com.sun.activation", "javax.activation-api") // 1.2.0
         private val JAVAX = ArtifactCoordinate("javax.activation", "javax.activation-api") // 1.2.0
-        private val JAKARTA_SUN = ArtifactCoordinate("com.sun.activation", "jakarta.activation") // 1.2.1 through 2.0.1
         private val JAKARTA = ArtifactCoordinate("jakarta.activation", "jakarta.activation-api") // 1.2.1 and later
 
         private val SPECIFICATION_TO_ACTIVATION_VERSION = mapOf(
@@ -46,14 +43,11 @@ internal class Activation : BasicApi(
         )
 
         private val JAVAX_COORDINATES = listOf(
-            GLASSFISH,
-            JAVAX_1,
             SUN_JAVAX,
             JAVAX,
         )
 
         private val JAKARTA_COORDINATES = listOf(
-            JAKARTA_SUN,
             JAKARTA,
         )
     }

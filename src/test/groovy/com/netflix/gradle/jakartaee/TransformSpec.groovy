@@ -49,7 +49,7 @@ jakartaeeMigration {
 
         expect:
         def files = resolvedRuntimeClasspathFiles()
-        files.size() == 34
+        files.size() == 36
         files.findAll { it.path.contains("/caches/transforms-") }.isEmpty()
     }
 

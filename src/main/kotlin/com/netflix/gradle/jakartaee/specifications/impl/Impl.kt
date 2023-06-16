@@ -26,9 +26,11 @@ import org.gradle.api.artifacts.CacheableRule
 internal interface Impl : Specification {
     companion object {
         val IMPLEMENTATIONS: List<Impl> = listOf(
-            Json(),
-            ServerFaces(),
-            XmlBind(),
+                Activation(),
+                Json(),
+                Mail(),
+                ServerFaces(),
+                XmlBind(),
         )
     }
 
