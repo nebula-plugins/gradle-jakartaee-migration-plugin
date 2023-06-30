@@ -81,6 +81,12 @@ public open class JakartaEeMigrationExtension(
             PROTOPATH_SUFFIX,
             KOTLIN_DEPENDENCIES_METADATA_SUFFIX
         )
+
+        // The Rewrite plugin adds a "rewrite" prefix to all sourceSet implementation configurations.
+        // https://github.com/openrewrite/rewrite-gradle-plugin/blob/main/plugin/src/main/java/org/openrewrite/gradle/isolated/DefaultProjectParser.java#L658
+        private val isRewriteConfiguration : (Configuration) -> Boolean = {
+            it.name.startsWith("rewrite") && !it.name.equals("rewrite")
+        }
     }
 
     private val configuredCapabilities = AtomicBoolean()
@@ -115,6 +121,8 @@ public open class JakartaEeMigrationExtension(
             if (SPRING_BOOT_CONFIGURATION_NAMES.contains(configuration.name)) {
                 migrate(configuration, true)
             } else if (INCLUDED_SUFFIXES.any { configuration.name.endsWith(it) }) {
+                migrate(configuration, true)
+            } else if (isRewriteConfiguration(configuration)) {
                 migrate(configuration, true)
             }
         }
