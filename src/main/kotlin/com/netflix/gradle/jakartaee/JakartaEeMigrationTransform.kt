@@ -116,6 +116,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         migration.setDestination(tempFilePath.toFile())
         migration.eeSpecProfile = EESpecProfiles.EE
         migration.setEnableDefaultExcludes(false)
+        migration.setZipInMemory(true)
 
         migration.execute()
 

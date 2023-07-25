@@ -36,6 +36,21 @@ dependencies {
         transformed.size() == 1
     }
 
+    def 'artifacts are transformed with lombok without error on JDKs with improved zip validation (eg 1.8.0_322)'() {
+        writeHelloWorld()
+        buildFile << """
+dependencies {   
+    implementation 'org.projectlombok:lombok:1.18.28'
+}
+"""
+
+        when:
+        def result = runTasks("build", "--info")
+
+        then:
+        ! result.output.contains("lombok-1.18.28-jakartaee.jar; invalid CEN header (bad signature)")
+    }
+
     def 'javaee api artifacts are not transformed when specifications are excluded'() {
         buildFile << """
 dependencies {
