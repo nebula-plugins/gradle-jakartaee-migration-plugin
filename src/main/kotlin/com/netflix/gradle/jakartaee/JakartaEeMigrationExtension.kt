@@ -86,6 +86,7 @@ public open class JakartaEeMigrationExtension(
     private val configuredCapabilities = AtomicBoolean()
     private val registeredTransform = AtomicBoolean()
     private val excludeSpecificationsTransform = AtomicBoolean()
+    private val transformInMemory = AtomicBoolean()
     private val preventTransformOfProductionConfigurations = AtomicBoolean()
     private val included = mutableListOf<ArtifactCoordinate>()
     private val excluded = mutableListOf<ArtifactCoordinate>()
@@ -304,8 +305,16 @@ public open class JakartaEeMigrationExtension(
                         .attribute(ARTIFACT_TYPE_ATTRIBUTE, ArtifactTypeDefinition.JAR_TYPE)
                     parameters.setIncludedArtifacts(included)
                     parameters.setExcludedArtifacts(excluded)
+                    parameters.setTransformInMemory(transformInMemory)
                 }
             }
         }
+    }
+
+    /**
+     * Enables inmemory zip processing for migration tool.
+     */
+    public fun transformInMemory() {
+        transformInMemory.set(true)
     }
 }

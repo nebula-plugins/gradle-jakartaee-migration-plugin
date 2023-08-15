@@ -42,6 +42,10 @@ dependencies {
 dependencies {   
     implementation 'org.projectlombok:lombok:1.18.28'
 }
+
+jakartaeeMigration {
+    transformInMemory()
+}
 """
 
         when:
