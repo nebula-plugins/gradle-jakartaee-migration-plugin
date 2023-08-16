@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
 import java.io.UncheckedIOException
 import java.nio.file.Files
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -55,6 +56,10 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         @Input
         fun getIncludedArtifacts(): List<ArtifactCoordinate>
         fun setIncludedArtifacts(includedArtifact: List<ArtifactCoordinate>)
+
+        @Input
+        fun getTransformInMemory(): AtomicBoolean
+        fun setTransformInMemory(transformInMemory: AtomicBoolean)
     }
 
     companion object {
@@ -81,6 +86,10 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
 
     private val includedPaths by lazy {
         parameters.getIncludedArtifacts().toPaths()
+    }
+
+    private val transformInMemory by lazy {
+        parameters.getTransformInMemory().get()
     }
 
     private fun List<ArtifactCoordinate>.toPaths() = flatMap {
@@ -116,7 +125,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         migration.setDestination(tempFilePath.toFile())
         migration.eeSpecProfile = EESpecProfiles.EE
         migration.setEnableDefaultExcludes(false)
-        migration.setZipInMemory(true)
+        migration.setZipInMemory(transformInMemory)
 
         migration.execute()
 
