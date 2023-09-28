@@ -38,6 +38,7 @@ public open class JakartaEeMigrationExtension(
 
         // Artifacts that include intentional references to javax packages that should never be transformed
         private val ARTIFACTS_WITH_INTENTIONAL_JAVAX = listOf(
+            "org.projectlombok:lombok",
             "org.springframework:spring-context",
             "org.springframework:spring-beans",
             "org.apache.tomcat.embed:tomcat-embed-core",
