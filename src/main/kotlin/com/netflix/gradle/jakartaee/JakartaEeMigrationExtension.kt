@@ -72,15 +72,13 @@ public open class JakartaEeMigrationExtension(
             "developmentOnly",
             "productionRuntimeClasspath",
             "processAotClasspath",
-            "processTestAotClasspath")
-
-        private val PROTOPATH_SUFFIX = "ProtoPath"
-
-        private val KOTLIN_DEPENDENCIES_METADATA_SUFFIX = "DependenciesMetadata"
+            "processTestAotClasspath",
+        )
 
         private val INCLUDED_SUFFIXES = listOf(
-            PROTOPATH_SUFFIX,
-            KOTLIN_DEPENDENCIES_METADATA_SUFFIX
+            "ProtoPath",
+            "DependenciesMetadata",
+            "PmdAuxClasspath",
         )
     }
 
