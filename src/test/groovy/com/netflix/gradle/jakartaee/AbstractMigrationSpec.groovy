@@ -20,7 +20,7 @@ package com.netflix.gradle.jakartaee
 abstract class AbstractMigrationSpec extends AbstractPluginSpec {
     def setup() {
         buildFile << """
-apply plugin: 'java'
+apply plugin: 'java-library'
 
 jakartaeeMigration {
     migrate()

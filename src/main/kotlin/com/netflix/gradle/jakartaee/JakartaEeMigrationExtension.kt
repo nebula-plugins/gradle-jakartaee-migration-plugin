@@ -296,15 +296,17 @@ public open class JakartaEeMigrationExtension(
                     it.attributes.attribute(JAKARTAEE_ATTRIBUTE, false)
                 }
             }
-            registerTransform(JakartaEeMigrationTransform::class.java) {
-                with(it) {
-                    from.attribute(JAKARTAEE_ATTRIBUTE, false)
-                        .attribute(ARTIFACT_TYPE_ATTRIBUTE, ArtifactTypeDefinition.JAR_TYPE)
-                    to.attribute(JAKARTAEE_ATTRIBUTE, true)
-                        .attribute(ARTIFACT_TYPE_ATTRIBUTE, ArtifactTypeDefinition.JAR_TYPE)
-                    parameters.setIncludedArtifacts(included)
-                    parameters.setExcludedArtifacts(excluded)
-                    parameters.setTransformInMemory(transformInMemory)
+            listOf(ArtifactTypeDefinition.JAR_TYPE, "test-jar").forEach { artifactType ->
+                registerTransform(JakartaEeMigrationTransform::class.java) {
+                    with(it) {
+                        from.attribute(JAKARTAEE_ATTRIBUTE, false)
+                                .attribute(ARTIFACT_TYPE_ATTRIBUTE, artifactType)
+                        to.attribute(JAKARTAEE_ATTRIBUTE, true)
+                                .attribute(ARTIFACT_TYPE_ATTRIBUTE, artifactType)
+                        parameters.setIncludedArtifacts(included)
+                        parameters.setExcludedArtifacts(excluded)
+                        parameters.setTransformInMemory(transformInMemory)
+                    }
                 }
             }
         }
