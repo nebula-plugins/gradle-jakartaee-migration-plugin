@@ -27,24 +27,40 @@ plugins {
     id 'com.netflix.nebula.jakartaee-migration'
 }
 
-tasks.register('resolveRuntimeClasspath') {
-    inputs.files(configurations.runtimeClasspath)
+abstract class ResolveRuntimeClasspath extends DefaultTask {
+    @Input
+    abstract ListProperty<File> getClasspath() 
 
-    doFirst {
-        def runtimeClasspath = configurations.findByName('runtimeClasspath')
-        if (!runtimeClasspath) {
+    @Input
+    abstract SetProperty<ComponentArtifactIdentifier> getArtifactIds()
+
+    @Input
+    abstract Property<File> getBuildDirectory()
+
+
+    @TaskAction
+    void resolveRuntimeClasspath() {
+        if (!artifactIds.isPresent()) {
             return
         }
-        def coordinates = runtimeClasspath.resolvedConfiguration.resolvedArtifacts.collect {
-            def id = it.moduleVersion.id
+        def coordinates = artifactIds.get().collect {
+            def id = it.identifier
             "\${id.group}:\${id.name}:\${id.version}"
         }.join('\\n')
-        def files = runtimeClasspath.files.join('\\n')
+        def files = classpath.get().join('\\n')
         
+        def buildDir = buildDirectory.get()
         buildDir.mkdirs()
         new File(buildDir, 'runtimeClasspath-coordinates.txt').write(coordinates)
         new File(buildDir, 'runtimeClasspath-files.txt').write(files)
     }
+}
+
+tasks.register('resolveRuntimeClasspath', ResolveRuntimeClasspath).configure {
+    artifactIds.set(project.configurations.runtimeClasspath.resolvedConfiguration.resolvedArtifacts.moduleVersion)
+    
+    classpath.set(project.configurations.named('runtimeClasspath').get().files)
+    buildDirectory.set(project.layout.buildDirectory.asFile.get())
 }
 
 repositories {
@@ -58,6 +74,8 @@ repositories {
     }
 }
 """
+
+        new File(projectDir, 'gradle.properties') << '''org.gradle.configuration-cache=true'''.stripIndent()
     }
 
     BuildResult resolvedRuntimeClasspathResult() {
