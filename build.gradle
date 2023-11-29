@@ -16,8 +16,8 @@
  */
 
 plugins {
-    id 'com.netflix.nebula.plugin-plugin' version '20.8.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    id 'com.netflix.nebula.plugin-plugin' version '20.10.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.20'
     id 'java-gradle-plugin'
 }
 
