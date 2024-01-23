@@ -44,6 +44,20 @@ public open class JakartaEeMigrationExtension(
             "org.apache.tomcat.embed:tomcat-embed-core",
             "org.apache.groovy:groovy",
             "org.apache.groovy:groovy-all",
+            "org.codehaus.groovy:groovy",
+            "org.codehaus.groovy:groovy-all",
+            "org.codehaus.groovy:groovy-ant",
+            "org.codehaus.groovy:groovy-astbuilder",
+            "org.codehaus.groovy:groovy-console",
+            "org.codehaus.groovy:groovy-datetime",
+            "org.codehaus.groovy:groovy-dateutil",
+            "org.codehaus.groovy:groovy-nio",
+            "org.codehaus.groovy:groovy-sql",
+            "org.codehaus.groovy:groovy-test",
+            "org.codehaus.groovy:groovy-templates",
+            "org.codehaus.groovy:groovy-json",
+            "org.codehaus.groovy:groovy-xml",
+            "org.codehaus.groovy:groovy-groovydoc",
         )
 
         private val PRODUCTION_CONFIGURATION_NAMES = setOf(
