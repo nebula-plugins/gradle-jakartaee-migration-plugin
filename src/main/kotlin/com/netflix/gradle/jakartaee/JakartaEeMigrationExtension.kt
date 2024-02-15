@@ -44,6 +44,8 @@ public open class JakartaEeMigrationExtension(
             "org.apache.tomcat.embed:tomcat-embed-core",
             "org.apache.groovy:groovy",
             "org.apache.groovy:groovy-all",
+            "org.codehaus.groovy:groovy",
+            "org.codehaus.groovy:groovy-all",
         )
 
         private val PRODUCTION_CONFIGURATION_NAMES = setOf(
