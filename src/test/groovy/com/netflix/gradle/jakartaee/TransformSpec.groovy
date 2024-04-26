@@ -32,7 +32,7 @@ dependencies {
         def files = resolvedRuntimeClasspathFiles()
         files.size() == 8
 
-        def transformed = files.findAll { it.path.contains("/caches/transforms-") }
+        def transformed = files.findAll { it.path.contains("/transformed/") }
         transformed.size() == 1
     }
 
@@ -104,7 +104,7 @@ jakartaeeMigration {
         def files = resolvedRuntimeClasspathFiles()
         files.size() == 1
 
-        def transformed = files.findAll { it.path.contains("/caches/transforms-") }
+        def transformed = files.findAll { it.path.contains("/transformed/reload4j-1.2.22-jakartaee.jar") }
         transformed.size() == 1
     }
 
