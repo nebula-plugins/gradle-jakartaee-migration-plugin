@@ -65,7 +65,7 @@ tasks.register('resolveRuntimeClasspath', ResolveRuntimeClasspath).configure {
 
 repositories {
     maven {
-        url "https://repo1.maven.org/maven2"
+        url = "https://repo1.maven.org/maven2"
         metadataSources {
             mavenPom()
              // Avoid Gradle metadata so we can resolve Spring 6 artifacts on JDK 8
