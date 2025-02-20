@@ -20,6 +20,7 @@ package com.netflix.gradle.jakartaee
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import org.apache.tomcat.jakartaee.EESpecProfiles
 import org.apache.tomcat.jakartaee.Migration
+import org.gradle.api.artifacts.transform.CacheableTransform
 import org.gradle.api.artifacts.transform.InputArtifact
 import org.gradle.api.artifacts.transform.TransformAction
 import org.gradle.api.artifacts.transform.TransformOutputs
@@ -29,7 +30,6 @@ import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
-import org.gradle.work.DisableCachingByDefault
 import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
 import java.io.UncheckedIOException
@@ -40,8 +40,7 @@ import java.util.logging.Level
 import java.util.logging.LogRecord
 import java.util.logging.Logger
 
-
-@DisableCachingByDefault(because = "Transform is fast enough not to benefit from caching")
+@CacheableTransform
 internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeMigrationTransform.Parameters> {
     interface Parameters : TransformParameters {
         /*
@@ -99,7 +98,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         )
     }
 
-    @PathSensitive(PathSensitivity.ABSOLUTE)
+    @PathSensitive(PathSensitivity.RELATIVE)
     @InputArtifact
     abstract fun getInputArtifact(): Provider<FileSystemLocation>
 
