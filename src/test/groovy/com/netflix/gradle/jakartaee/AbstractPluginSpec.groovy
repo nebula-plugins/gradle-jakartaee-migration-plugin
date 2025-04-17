@@ -32,7 +32,7 @@ abstract class ResolveRuntimeClasspath extends DefaultTask {
     abstract ListProperty<File> getClasspath() 
 
     @Input
-    abstract SetProperty<ComponentArtifactIdentifier> getArtifactIds()
+    abstract SetProperty<ResolvedModuleVersion> getArtifactIds()
 
     @Input
     abstract Property<File> getBuildDirectory()
