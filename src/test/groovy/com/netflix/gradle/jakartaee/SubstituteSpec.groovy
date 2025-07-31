@@ -132,4 +132,29 @@ jakartaeeMigration {
         coordinates.findAll { !it.contains('jakarta') }.isEmpty()
     }
 
+    def 'annotationProcessor configuration is not substituted by default'() {
+        debug = true
+
+        buildFile << """
+dependencies {
+    annotationProcessor 'javax.inject:javax.inject:1'
+}
+
+jakartaeeMigration {
+    substitute()
+}
+
+tasks.register('resolveAnnotationProcessorClasspath', ResolveRuntimeClasspath).configure {
+    artifactIds.set(project.configurations.annotationProcessor.resolvedConfiguration.resolvedArtifacts.moduleVersion)
+    
+    classpath.set(project.configurations.named('annotationProcessor').get().files)
+    buildDirectory.set(project.layout.buildDirectory.asFile.get())
+}
+"""
+
+        expect:
+        runTasks('resolveAnnotationProcessorClasspath')
+        def coordinates = new File(projectDir, 'build/runtimeClasspath-coordinates.txt').text.split('\n')
+        coordinates[0] == 'javax.inject:javax.inject:1'
+    }
 }

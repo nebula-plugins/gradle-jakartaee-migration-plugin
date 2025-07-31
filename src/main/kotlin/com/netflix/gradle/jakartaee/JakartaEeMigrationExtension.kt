@@ -103,21 +103,25 @@ public open class JakartaEeMigrationExtension(
      * Enable automatic migration.
      */
     public fun migrate() {
+        applyToConfigurations({ configuration -> migrate(configuration, true)})
+    }
+
+    private fun applyToConfigurations(action: (Configuration) -> Unit) {
         val javaExtension = project.extensions.findByType(JavaPluginExtension::class.java)
         check(javaExtension != null) { "The Java plugin extension is not present on this project" }
         javaExtension.sourceSets.configureEach { sourceSet ->
             val configurationNames = CLASSPATH_NAME_ACCESSORS.map { it(sourceSet) }
             project.configurations.configureEach { configuration ->
                 if (configurationNames.contains(configuration.name)) {
-                    migrate(configuration, true)
+                    action(configuration)
                 }
             }
         }
         project.configurations.configureEach {configuration ->
             if (SPRING_BOOT_CONFIGURATION_NAMES.contains(configuration.name)) {
-                migrate(configuration, true)
+                action(configuration)
             } else if (INCLUDED_SUFFIXES.any { configuration.name.endsWith(it) }) {
-                migrate(configuration, true)
+                action(configuration)
             }
         }
     }
@@ -185,11 +189,7 @@ public open class JakartaEeMigrationExtension(
      * Ensure that at least an EE10 version of all used specifications are available in all configurations.
      */
     public fun substitute() {
-        configurations.all { configuration ->
-            if (configuration.name != "resolutionRules") {
-                substitute(configuration)
-            }
-        }
+        applyToConfigurations(::substitute)
     }
 
     /**
@@ -216,11 +216,7 @@ public open class JakartaEeMigrationExtension(
      * Transform all configurations.
      */
     public fun transform() {
-        configurations.all { configuration ->
-            if (configuration.name != "resolutionRules") {
-                transform(configuration)
-            }
-        }
+        applyToConfigurations(::transform)
     }
 
     /**
