@@ -136,9 +136,9 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
                 Files.setPosixFilePermissions(outputFile.toPath(), perms)
             } catch (e: UnsupportedOperationException) {
             }
-            LOGGER.info("Transformed {} to JakartaEE {}", inputFile.name, outputFile.name)
+            LOGGER.debug("Transformed {} to JakartaEE {}", inputFile.name, outputFile.name)
         } else {
-            LOGGER.info("No JakartaEE transformation required for {}", inputFile.name)
+            LOGGER.debug("No JakartaEE transformation required for {}", inputFile.name)
             Files.delete(tempFilePath)
             outputs.file(inputFile)
         }
