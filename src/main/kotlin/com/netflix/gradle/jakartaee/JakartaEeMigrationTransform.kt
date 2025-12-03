@@ -26,6 +26,8 @@ import org.gradle.api.artifacts.transform.TransformAction
 import org.gradle.api.artifacts.transform.TransformOutputs
 import org.gradle.api.artifacts.transform.TransformParameters
 import org.gradle.api.file.FileSystemLocation
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.PathSensitive
@@ -34,7 +36,6 @@ import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
 import java.io.UncheckedIOException
 import java.nio.file.Files
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -48,17 +49,14 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
          * aren't dependency resolution specific, so we can't get access to the details of artifact, so we have to
          * rely on the filename for excludes.
          */
-        @Input
-        fun getExcludedArtifacts(): List<ArtifactCoordinate>
-        fun setExcludedArtifacts(excludedArtifact: List<ArtifactCoordinate>)
+        @get:Input
+        val excludedArtifacts: ListProperty<ArtifactCoordinate>
 
-        @Input
-        fun getIncludedArtifacts(): List<ArtifactCoordinate>
-        fun setIncludedArtifacts(includedArtifact: List<ArtifactCoordinate>)
+        @get:Input
+        val includedArtifacts: ListProperty<ArtifactCoordinate>
 
-        @Input
-        fun getTransformInMemory(): AtomicBoolean
-        fun setTransformInMemory(transformInMemory: AtomicBoolean)
+        @get:Input
+        val transformInMemory: Property<Boolean>
     }
 
     companion object {
@@ -80,15 +78,15 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
      * will fail to resolve. Allowing it to resolve with compatibility rules then causes the transform not to run.
      */
     private val excludedPaths by lazy {
-        parameters.getExcludedArtifacts().toPaths()
+        parameters.excludedArtifacts.get().toPaths()
     }
 
     private val includedPaths by lazy {
-        parameters.getIncludedArtifacts().toPaths()
+        parameters.includedArtifacts.get().toPaths()
     }
 
     private val transformInMemory by lazy {
-        parameters.getTransformInMemory().get()
+        parameters.transformInMemory.get()
     }
 
     private fun List<ArtifactCoordinate>.toPaths() = flatMap {

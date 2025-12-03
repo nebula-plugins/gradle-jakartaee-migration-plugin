@@ -25,8 +25,9 @@ import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.api.attributes.Attribute
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
+import org.gradle.api.provider.ListProperty
+import org.gradle.api.provider.Property
 import org.gradle.api.tasks.SourceSet
-import java.util.concurrent.atomic.AtomicBoolean
 
 public open class JakartaEeMigrationExtension(
     private val project: Project,
@@ -84,20 +85,21 @@ public open class JakartaEeMigrationExtension(
         )
     }
 
-    private val configuredCapabilities = AtomicBoolean()
-    private val registeredTransform = AtomicBoolean()
-    private val excludeSpecificationsTransform = AtomicBoolean()
-    private val transformInMemory = AtomicBoolean()
-    private val preventTransformOfProductionConfigurations = AtomicBoolean()
-    private val included = mutableListOf<ArtifactCoordinate>()
-    private val excluded = mutableListOf<ArtifactCoordinate>()
+    private val configuredCapabilities: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
+    private val registeredTransform: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
+    private val excludeSpecificationsTransform: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
+    private val transformInMemory: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
+    private val preventTransformOfProductionConfigurations: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
+    private val included: ListProperty<ArtifactCoordinate> = project.objects.listProperty(ArtifactCoordinate::class.java).empty()
+    private val excluded: ListProperty<ArtifactCoordinate> = project.objects.listProperty(ArtifactCoordinate::class.java).convention(
+        ARTIFACTS_WITH_INTENTIONAL_JAVAX.map {
+            val split = it.split(":")
+            ArtifactCoordinate(split[0], split[1])
+        }
+    )
 
     private val configurations = project.configurations
     private val dependencies = project.dependencies
-
-    init {
-        ARTIFACTS_WITH_INTENTIONAL_JAVAX.forEach(::excludeTransform)
-    }
 
     /**
      * Enable automatic migration.
@@ -109,18 +111,22 @@ public open class JakartaEeMigrationExtension(
     private fun applyToConfigurations(action: (Configuration) -> Unit) {
         val javaExtension = project.extensions.findByType(JavaPluginExtension::class.java)
         check(javaExtension != null) { "The Java plugin extension is not present on this project" }
-        javaExtension.sourceSets.configureEach { sourceSet ->
-            val configurationNames = CLASSPATH_NAME_ACCESSORS.map { it(sourceSet) }
-            project.configurations.configureEach { configuration ->
-                if (configurationNames.contains(configuration.name)) {
-                    action(configuration)
-                }
-            }
+
+        // Build the set of applicable configuration names lazily
+        val applicableConfigurationNames = project.provider {
+            val sourceSetConfigs = javaExtension.sourceSets.flatMap { sourceSet ->
+                CLASSPATH_NAME_ACCESSORS.map { accessor -> accessor(sourceSet) }
+            }.toSet()
+
+            sourceSetConfigs + SPRING_BOOT_CONFIGURATION_NAMES
         }
-        project.configurations.configureEach {configuration ->
-            if (SPRING_BOOT_CONFIGURATION_NAMES.contains(configuration.name)) {
-                action(configuration)
-            } else if (INCLUDED_SUFFIXES.any { configuration.name.endsWith(it) }) {
+
+        project.configurations.configureEach { configuration ->
+            // Check if this configuration should have the action applied
+            val shouldApply = applicableConfigurationNames.get().contains(configuration.name) ||
+                              INCLUDED_SUFFIXES.any { configuration.name.endsWith(it) }
+
+            if (shouldApply) {
                 action(configuration)
             }
         }
@@ -132,7 +138,9 @@ public open class JakartaEeMigrationExtension(
      * @param configurationName the name of the configuration to be migrated
      */
     public fun migrate(configurationName: String) {
-        migrate(configurations.getByName(configurationName))
+        configurations.named(configurationName).configure { configuration ->
+            migrate(configuration)
+        }
     }
 
     /**
@@ -157,7 +165,8 @@ public open class JakartaEeMigrationExtension(
      * Configure capabilities for the project.
      */
     public fun configureCapabilities() {
-        if (configuredCapabilities.compareAndSet(false, true)) {
+        if (!configuredCapabilities.get()) {
+            configuredCapabilities.set(true)
             IMPLEMENTATIONS.forEach { specification ->
                 specification.configureCapabilities(dependencies)
             }
@@ -170,7 +179,9 @@ public open class JakartaEeMigrationExtension(
      * @param configurationName the configuration to configure
      */
     public fun resolveCapabilityConflicts(configurationName: String) {
-        resolveCapabilityConflicts(configurations.getByName(configurationName))
+        configurations.named(configurationName).configure { configuration ->
+            resolveCapabilityConflicts(configuration)
+        }
     }
 
     /**
@@ -198,7 +209,9 @@ public open class JakartaEeMigrationExtension(
      * @param configurationName the configuration to configure
      */
     public fun substitute(configurationName: String) {
-        substitute(configurations.getByName(configurationName))
+        configurations.named(configurationName).configure { configuration ->
+            substitute(configuration)
+        }
     }
 
     /**
@@ -225,7 +238,9 @@ public open class JakartaEeMigrationExtension(
      * @param configurationName the name of the configuration to transform
      */
     public fun transform(configurationName: String) {
-        transform(configurations.getByName(configurationName))
+        configurations.named(configurationName).configure { configuration ->
+            transform(configuration)
+        }
     }
 
     /**
@@ -234,7 +249,8 @@ public open class JakartaEeMigrationExtension(
      * @param configuration the configuration to transform
      */
     public fun transform(configuration: Configuration) {
-        if (registeredTransform.compareAndSet(false, true)) {
+        if (!registeredTransform.get()) {
+            registeredTransform.set(true)
             registerTransform()
         }
         if (preventTransformOfProductionConfigurations.get() && PRODUCTION_CONFIGURATION_NAMES.contains(configuration.name)) {
@@ -251,7 +267,7 @@ public open class JakartaEeMigrationExtension(
     public fun excludeTransform(notation: String) {
         val split = notation.split(":")
         check(split.size == 2) { "Invalid notation, should be in the form group:module" }
-        excluded += ArtifactCoordinate(split[0], split[1])
+        excluded.add(ArtifactCoordinate(split[0], split[1]))
     }
 
     /**
@@ -262,18 +278,19 @@ public open class JakartaEeMigrationExtension(
     public fun includeTransform(notation: String) {
         val split = notation.split(":")
         check(split.size == 2) { "Invalid notation, should be in the form group:module" }
-        included += ArtifactCoordinate(split[0], split[1])
+        included.add(ArtifactCoordinate(split[0], split[1]))
     }
 
     /**
      * Exclude all specification artifacts from transformation.
      */
     public fun excludeSpecificationsTransform() {
-        if (excludeSpecificationsTransform.compareAndSet(false, true)) {
+        if (!excludeSpecificationsTransform.get()) {
+            excludeSpecificationsTransform.set(true)
             val specificationArtifacts = IMPLEMENTATIONS
                 .flatMap { specification -> specification.coordinates }
                 .distinct()
-            excluded += specificationArtifacts
+            excluded.addAll(specificationArtifacts)
         }
     }
 
@@ -301,9 +318,9 @@ public open class JakartaEeMigrationExtension(
                                 .attribute(ARTIFACT_TYPE_ATTRIBUTE, artifactType)
                         to.attribute(JAKARTAEE_ATTRIBUTE, true)
                                 .attribute(ARTIFACT_TYPE_ATTRIBUTE, artifactType)
-                        parameters.setIncludedArtifacts(included)
-                        parameters.setExcludedArtifacts(excluded)
-                        parameters.setTransformInMemory(transformInMemory)
+                        parameters.includedArtifacts.set(included)
+                        parameters.excludedArtifacts.set(excluded)
+                        parameters.transformInMemory.set(transformInMemory)
                     }
                 }
             }
