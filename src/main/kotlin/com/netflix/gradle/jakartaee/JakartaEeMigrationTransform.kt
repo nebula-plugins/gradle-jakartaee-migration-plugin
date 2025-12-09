@@ -96,7 +96,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
         )
     }
 
-    @PathSensitive(PathSensitivity.RELATIVE)
+    @PathSensitive(PathSensitivity.NAME_ONLY)
     @InputArtifact
     abstract fun getInputArtifact(): Provider<FileSystemLocation>
 
