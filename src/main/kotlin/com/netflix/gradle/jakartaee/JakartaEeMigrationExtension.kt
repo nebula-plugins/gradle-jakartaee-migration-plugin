@@ -91,7 +91,7 @@ public open class JakartaEeMigrationExtension(
     private val transformInMemory: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
     private val preventTransformOfProductionConfigurations: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
     private val included: ListProperty<ArtifactCoordinate> = project.objects.listProperty(ArtifactCoordinate::class.java).empty()
-    private val excluded: ListProperty<ArtifactCoordinate> = project.objects.listProperty(ArtifactCoordinate::class.java).convention(
+    private val excluded: ListProperty<ArtifactCoordinate> = project.objects.listProperty(ArtifactCoordinate::class.java).value(
         ARTIFACTS_WITH_INTENTIONAL_JAVAX.map {
             val split = it.split(":")
             ArtifactCoordinate(split[0], split[1])
