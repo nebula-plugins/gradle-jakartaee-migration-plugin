@@ -69,7 +69,7 @@ jakartaeeMigration {
         expect:
         def files = resolvedRuntimeClasspathFiles()
         files.size() == 36
-        files.findAll { it.path.contains("/caches/transforms-") }.isEmpty()
+        files.findAll { it.path.contains("/transformed/") }.isEmpty()
     }
 
     def 'artifacts can be excluded'() {
@@ -86,7 +86,20 @@ jakartaeeMigration {
         expect:
         def files = resolvedRuntimeClasspathFiles()
         files.size() == 1
-        files.findAll { it.path.contains("/caches/transforms-") }.isEmpty()
+        files.findAll { it.path.contains("/transformed/") }.isEmpty()
+    }
+
+    def 'default excludes are applied'() {
+        buildFile << """
+dependencies {
+    implementation 'org.apache.groovy:groovy:4.0.0'
+}
+"""
+
+        expect:
+        def files = resolvedRuntimeClasspathFiles()
+        files.size() == 1
+        files.findAll { it.path.contains("/transformed/") }.isEmpty()
     }
 
     def 'artifacts can be included'() {
