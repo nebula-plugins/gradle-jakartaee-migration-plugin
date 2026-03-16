@@ -19,18 +19,26 @@ package com.netflix.gradle.jakartaee
 
 import com.netflix.gradle.jakartaee.artifacts.ArtifactCoordinate
 import com.netflix.gradle.jakartaee.specifications.Specification.Companion.IMPLEMENTATIONS
-import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
+import org.gradle.api.artifacts.ConfigurationContainer
+import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.type.ArtifactTypeDefinition
 import org.gradle.api.attributes.Attribute
+import org.gradle.api.model.ObjectFactory
+import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.tasks.SourceSet
 
 public open class JakartaEeMigrationExtension(
-    private val project: Project,
+    private val objects: ObjectFactory,
+    private val configurations: ConfigurationContainer,
+    private val dependencies: DependencyHandler,
+    private val extensions: ExtensionContainer,
+    private val providerFactory: ProviderFactory,
 ) {
     private companion object {
         // Gradle's ArtifactTypeDefinition doesn't have this until 7.3
@@ -85,21 +93,19 @@ public open class JakartaEeMigrationExtension(
         )
     }
 
-    private val configuredCapabilities: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
-    private val registeredTransform: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
-    private val excludeSpecificationsTransform: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
-    private val transformInMemory: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
-    private val preventTransformOfProductionConfigurations: Property<Boolean> = project.objects.property(Boolean::class.java).convention(false)
-    private val included: ListProperty<ArtifactCoordinate> = project.objects.listProperty(ArtifactCoordinate::class.java).empty()
-    private val excluded: ListProperty<ArtifactCoordinate> = project.objects.listProperty(ArtifactCoordinate::class.java).value(
+    private val configuredCapabilities: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
+    private val registeredTransform: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
+    private val excludeSpecificationsTransform: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
+    private val transformInMemory: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
+    private val preventTransformOfProductionConfigurations: Property<Boolean> = objects.property(Boolean::class.java).convention(false)
+    private val included: ListProperty<ArtifactCoordinate> = objects.listProperty(ArtifactCoordinate::class.java).empty()
+    private val excluded: ListProperty<ArtifactCoordinate> = objects.listProperty(ArtifactCoordinate::class.java).value(
         ARTIFACTS_WITH_INTENTIONAL_JAVAX.map {
             val split = it.split(":")
             ArtifactCoordinate(split[0], split[1])
         }
     )
 
-    private val configurations = project.configurations
-    private val dependencies = project.dependencies
 
     /**
      * Enable automatic migration.
@@ -109,11 +115,11 @@ public open class JakartaEeMigrationExtension(
     }
 
     private fun applyToConfigurations(action: (Configuration) -> Unit) {
-        val javaExtension = project.extensions.findByType(JavaPluginExtension::class.java)
+        val javaExtension = extensions.findByType(JavaPluginExtension::class.java)
         check(javaExtension != null) { "The Java plugin extension is not present on this project" }
 
         // Build the set of applicable configuration names lazily
-        val applicableConfigurationNames = project.provider {
+        val applicableConfigurationNames = providerFactory.provider {
             val sourceSetConfigs = javaExtension.sourceSets.flatMap { sourceSet ->
                 CLASSPATH_NAME_ACCESSORS.map { accessor -> accessor(sourceSet) }
             }.toSet()
@@ -121,7 +127,7 @@ public open class JakartaEeMigrationExtension(
             sourceSetConfigs + SPRING_BOOT_CONFIGURATION_NAMES
         }
 
-        project.configurations.configureEach { configuration ->
+        configurations.configureEach { configuration ->
             // Check if this configuration should have the action applied
             val shouldApply = applicableConfigurationNames.get().contains(configuration.name) ||
                               INCLUDED_SUFFIXES.any { configuration.name.endsWith(it) }
