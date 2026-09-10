@@ -121,13 +121,13 @@ public open class JakartaEeMigrationExtension(
             sourceSetConfigs + SPRING_BOOT_CONFIGURATION_NAMES
         }
 
-        project.configurations.configureEach { configuration ->
+        project.configurations.configureEach {
             // Check if this configuration should have the action applied
-            val shouldApply = applicableConfigurationNames.get().contains(configuration.name) ||
-                              INCLUDED_SUFFIXES.any { configuration.name.endsWith(it) }
+            val shouldApply = applicableConfigurationNames.get().contains(name) ||
+                              INCLUDED_SUFFIXES.any { name.endsWith(it) }
 
             if (shouldApply) {
-                action(configuration)
+                action(this)
             }
         }
     }
@@ -138,8 +138,8 @@ public open class JakartaEeMigrationExtension(
      * @param configurationName the name of the configuration to be migrated
      */
     public fun migrate(configurationName: String) {
-        configurations.named(configurationName).configure { configuration ->
-            migrate(configuration)
+        configurations.named(configurationName).configure {
+            migrate(this)
         }
     }
 
@@ -179,8 +179,8 @@ public open class JakartaEeMigrationExtension(
      * @param configurationName the configuration to configure
      */
     public fun resolveCapabilityConflicts(configurationName: String) {
-        configurations.named(configurationName).configure { configuration ->
-            resolveCapabilityConflicts(configuration)
+        configurations.named(configurationName).configure {
+            resolveCapabilityConflicts(this)
         }
     }
 
@@ -209,8 +209,8 @@ public open class JakartaEeMigrationExtension(
      * @param configurationName the configuration to configure
      */
     public fun substitute(configurationName: String) {
-        configurations.named(configurationName).configure { configuration ->
-            substitute(configuration)
+        configurations.named(configurationName).configure {
+            substitute(this)
         }
     }
 
@@ -238,8 +238,8 @@ public open class JakartaEeMigrationExtension(
      * @param configurationName the name of the configuration to transform
      */
     public fun transform(configurationName: String) {
-        configurations.named(configurationName).configure { configuration ->
-            transform(configuration)
+        configurations.named(configurationName).configure {
+            transform(this)
         }
     }
 
@@ -304,16 +304,16 @@ public open class JakartaEeMigrationExtension(
     private fun registerTransform() {
         with(dependencies) {
             attributesSchema {
-                it.attribute(JAKARTAEE_ATTRIBUTE)
+                attribute(JAKARTAEE_ATTRIBUTE)
             }
             artifactTypes.configureEach {
-                if (it.name == ArtifactTypeDefinition.JAR_TYPE) {
-                    it.attributes.attribute(JAKARTAEE_ATTRIBUTE, false)
+                if (name == ArtifactTypeDefinition.JAR_TYPE) {
+                    attributes.attribute(JAKARTAEE_ATTRIBUTE, false)
                 }
             }
             listOf(ArtifactTypeDefinition.JAR_TYPE, "test-jar").forEach { artifactType ->
                 registerTransform(JakartaEeMigrationTransform::class.java) {
-                    with(it) {
+                    with(this) {
                         from.attribute(JAKARTAEE_ATTRIBUTE, false)
                                 .attribute(ARTIFACT_TYPE_ATTRIBUTE, artifactType)
                         to.attribute(JAKARTAEE_ATTRIBUTE, true)

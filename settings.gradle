@@ -1,13 +1,12 @@
-plugins {
-    id 'com.gradle.enterprise' version '3.15.1'
-}
-
-gradleEnterprise {
-    buildScan {
-        publishAlways()
-        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
-        termsOfServiceAgree = 'yes'
+pluginManagement {
+    plugins {
+        id("com.netflix.nebula.root") version ("25.+")
+        id("com.netflix.nebula.plugin-plugin") version ("25.+")
+        id("com.netflix.nebula.oss.settings") version("25.+")
     }
+}
+plugins {
+    id("com.netflix.nebula.oss.settings")
 }
 
 rootProject.name = 'gradle-jakartaee-migration-plugin'
