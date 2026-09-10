@@ -21,7 +21,7 @@ plugins {
 }
 
 dependencies {
-    implementation ("org.apache.tomcat:jakartaee-migration:1.0.6:shaded") {
+    implementation ("org.apache.tomcat:jakartaee-migration:1.0.12:shaded") {
         exclude(group = "*", module = "*")
     }
     testImplementation("org.spockframework:spock-junit4:2.4-groovy-4.0")
