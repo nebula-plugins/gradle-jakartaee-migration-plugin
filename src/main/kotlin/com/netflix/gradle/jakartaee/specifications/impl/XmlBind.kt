@@ -62,8 +62,8 @@ internal class XmlBind : BasicImpl(
 
     override fun substitute(configuration: Configuration) {
         val coordinates = listOf(SUN, GLASSFISH)
-        val substitutionAction = Action<DependencySubstitution> { details ->
-            val requested = details.requested
+        val substitutionAction = Action<DependencySubstitution> {
+            val requested = requested
             if (requested is ModuleComponentSelector) {
                 val moduleIdentifier = requested.moduleIdentifier
                 val coordinate = ArtifactCoordinate(moduleIdentifier.group, moduleIdentifier.name)
@@ -72,7 +72,7 @@ internal class XmlBind : BasicImpl(
                 if (coordinates.contains(coordinate.module) && coordinate.version < minVersion) {
                     val message = "At least Jakarta EE 10 is required"
                     val target = coordinate.module.withVersion(minVersion)
-                    details.useTarget(target.notation, message)
+                    useTarget(target.notation, message)
                 }
             }
         }

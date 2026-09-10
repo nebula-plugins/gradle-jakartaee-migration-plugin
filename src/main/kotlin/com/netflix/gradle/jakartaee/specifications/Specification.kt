@@ -70,9 +70,9 @@ internal interface Specification : ComponentMetadataRule {
     }
 
     override fun execute(context: ComponentMetadataContext) {
-        context.details.allVariants { metadata ->
-            metadata.withCapabilities {
-                it.addCapability(capabilityGroup, name, context.details.id.version)
+        context.details.allVariants {
+            withCapabilities {
+                addCapability(capabilityGroup, name, context.details.id.version)
             }
         }
     }
@@ -84,10 +84,10 @@ internal interface Specification : ComponentMetadataRule {
         val capability = "${capabilityGroup}:${name}"
         configuration.resolutionStrategy
             .capabilitiesResolution
-            .withCapability(capability) { details ->
+            .withCapability(capability) {
                 // selectHighestVersion but using the specification version provided by the artifact
-                details.because("Provides the highest EE specification version")
-                val candidate = details.candidates
+                because("Provides the highest EE specification version")
+                val candidate = candidates
                     .filter { it.id is ModuleComponentIdentifier }
                     .sortedByDescending {
                         val coordinate = it.toCoordinate()
@@ -95,7 +95,7 @@ internal interface Specification : ComponentMetadataRule {
                     }.maxBy {
                         val coordinate = it.toCoordinate()
                         if (artifactType(coordinate.module) == ArtifactType.EMBED) {
-                            details.because("Provides an embedded EE API and implementation")
+                            because("Provides an embedded EE API and implementation")
                             // Embedded implementations win regardless of specification/package provided
                             ArtifactVersion(Integer.MAX_VALUE.toString())
                         } else {
@@ -103,17 +103,17 @@ internal interface Specification : ComponentMetadataRule {
                         }
                     }
 
-                details.select(candidate)
+                select(candidate)
             }
     }
 
     fun substitute(configuration: Configuration) {
-        configuration.resolutionStrategy.dependencySubstitution { substitution ->
+        configuration.resolutionStrategy.dependencySubstitution {
             val jakartaImplementation = implementationForSpecification(SpecificationVersion.EE10)
-            val to = substitution.module(jakartaImplementation.notation)
+            val to = module(jakartaImplementation.notation)
             javaxCoordinates.forEach { coordinate ->
-                val from = substitution.module(coordinate.notation)
-                substitution.substitute(from).using(to).because("At least Jakarta EE 10 is required")
+                val from = module(coordinate.notation)
+                substitute(from).using(to).because("At least Jakarta EE 10 is required")
             }
         }
     }

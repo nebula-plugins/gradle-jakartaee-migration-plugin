@@ -17,6 +17,9 @@
 
 package com.netflix.gradle.jakartaee
 
+import org.jspecify.annotations.NullMarked
+
+@NullMarked
 class CapabilityOnlySpec extends AbstractPluginSpec {
     def 'jakarta.servlet-api is preferred'() {
         buildFile << """
@@ -35,6 +38,10 @@ jakartaeeMigration {
 
         expect:
         def result = resolvedRuntimeClasspathFailureResult()
-        result.output.contains("Cannot select module with conflict on capability 'com.netflix.gradle.jakartaee:servlet-api:4.0.2' also provided by ['javax.servlet:servlet-api:2.2' (runtime), 'javax.servlet:javax.servlet-api:3.0.1' (runtime)]")
+        result.output.contains("Could not resolve jakarta.servlet:jakarta.servlet-api:4.0.2")
+        def servlet4 = result.output.substring(result.output.indexOf("Could not resolve jakarta.servlet:jakarta.servlet-api:4.0.2"))
+        servlet4.contains("Cannot select module with conflict on capability 'com.netflix.gradle.jakartaee:servlet-api:4.0.2'")
+        servlet4.contains("'javax.servlet:servlet-api:2.2' (runtime)")
+        servlet4.contains("'javax.servlet:javax.servlet-api:3.0.1' (runtime)")
     }
 }
