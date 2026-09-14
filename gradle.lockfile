@@ -3,14 +3,14 @@
 # This file is expected to be part of source control.
 # To regenerate this file, run: ./gradlew :dependencies --write-locks
 cglib:cglib-nodep:3.2.2=testRuntimeClasspath
-com.netflix.nebula:archrules-common:2.0.5=mainArchRulesRuntime,testArchRulesRuntime
-com.netflix.nebula:archrules-deprecation:2.0.5=mainArchRulesRuntime,testArchRulesRuntime
+com.netflix.nebula:archrules-common:2.0.7=mainArchRulesRuntime,testArchRulesRuntime
+com.netflix.nebula:archrules-deprecation:2.0.7=mainArchRulesRuntime,testArchRulesRuntime
 com.netflix.nebula:archrules-gradle-plugin-development:1.0.4=mainArchRulesRuntime,testArchRulesRuntime
-com.netflix.nebula:archrules-guava:2.0.5=mainArchRulesRuntime,testArchRulesRuntime
-com.netflix.nebula:archrules-joda:2.0.5=mainArchRulesRuntime,testArchRulesRuntime
-com.netflix.nebula:archrules-nullability:2.0.5=mainArchRulesRuntime,testArchRulesRuntime
-com.netflix.nebula:archrules-security:2.0.5=mainArchRulesRuntime,testArchRulesRuntime
-com.netflix.nebula:archrules-testing-frameworks:2.0.5=mainArchRulesRuntime,testArchRulesRuntime
+com.netflix.nebula:archrules-guava:2.0.7=mainArchRulesRuntime,testArchRulesRuntime
+com.netflix.nebula:archrules-joda:2.0.7=mainArchRulesRuntime,testArchRulesRuntime
+com.netflix.nebula:archrules-nullability:2.0.7=mainArchRulesRuntime,testArchRulesRuntime
+com.netflix.nebula:archrules-security:2.0.7=mainArchRulesRuntime,testArchRulesRuntime
+com.netflix.nebula:archrules-testing-frameworks:2.0.7=mainArchRulesRuntime,testArchRulesRuntime
 com.netflix.nebula:nebula-archrules-core:1.4.2=mainArchRulesRuntime,testArchRulesRuntime
 com.netflix.nebula:nebula-test:11.13.0=testArchRulesRuntime,testCompileClasspath,testRuntimeClasspath
 com.tngtech.archunit:archunit:1.5.0=mainArchRulesRuntime,testArchRulesRuntime
