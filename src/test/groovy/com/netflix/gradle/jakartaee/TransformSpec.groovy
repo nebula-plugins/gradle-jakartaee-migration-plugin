@@ -17,6 +17,14 @@
 
 package com.netflix.gradle.jakartaee
 
+import spock.lang.Requires
+
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.attribute.PosixFilePermissions
+import java.util.jar.JarEntry
+import java.util.jar.JarOutputStream
+
 class TransformSpec extends AbstractMigrationSpec {
     def 'artifacts are transformed'() {
         buildFile << """
@@ -119,6 +127,30 @@ jakartaeeMigration {
 
         def transformed = files.findAll { it.path.contains("/transformed/reload4j-1.2.22-jakartaee.jar") }
         transformed.size() == 1
+    }
+
+    @Requires({ FileSystems.default.supportedFileAttributeViews().contains('posix') })
+    def 'transformed artifacts are world-readable regardless of input permissions'() {
+        def libs = new File(projectDir, 'libs')
+        libs.mkdirs()
+        def inputJar = new File(libs, 'needs-migration.jar')
+        new JarOutputStream(new FileOutputStream(inputJar)).withCloseable { jar ->
+            jar.putNextEntry(new JarEntry('META-INF/web.xml'))
+            jar.write('<servlet-class>javax.servlet.http.HttpServlet</servlet-class>'.bytes)
+            jar.closeEntry()
+        }
+        Files.setPosixFilePermissions(inputJar.toPath(), PosixFilePermissions.fromString('rw-------'))
+
+        buildFile << """
+dependencies {
+    implementation files('libs/needs-migration.jar')
+}
+"""
+
+        expect:
+        def transformed = resolvedRuntimeClasspathFiles().find { it.name == 'needs-migration-jakartaee.jar' }
+        transformed != null
+        PosixFilePermissions.toString(Files.getPosixFilePermissions(transformed.toPath())) == 'rw-r--r--'
     }
 
 }

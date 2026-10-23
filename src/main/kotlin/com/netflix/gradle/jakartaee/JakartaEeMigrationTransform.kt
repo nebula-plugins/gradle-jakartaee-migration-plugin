@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory
 import java.io.FileNotFoundException
 import java.io.UncheckedIOException
 import java.nio.file.Files
+import java.nio.file.attribute.PosixFilePermissions
 import java.util.logging.Handler
 import java.util.logging.Level
 import java.util.logging.LogRecord
@@ -61,6 +62,7 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(JakartaEeMigrationTransform::class.java)
+        private val OUTPUT_PERMISSIONS = PosixFilePermissions.fromString("rw-r--r--")
 
         init {
             val logger = Logger.getLogger(Migration::class.java.canonicalName)
@@ -130,8 +132,9 @@ internal abstract class JakartaEeMigrationTransform : TransformAction<JakartaEeM
             val outputFile = outputs.file("${inputFile.nameWithoutExtension}-jakartaee.jar")
             Files.move(tempFilePath, outputFile.toPath())
             try {
-                val perms = Files.getPosixFilePermissions(inputFile.toPath())
-                Files.setPosixFilePermissions(outputFile.toPath(), perms)
+                // Fixed mode: the input's mode isn't part of the cache key, so copying it lets one
+                // agent's mode poison the build cache.
+                Files.setPosixFilePermissions(outputFile.toPath(), OUTPUT_PERMISSIONS)
             } catch (e: UnsupportedOperationException) {
             }
             LOGGER.debug("Transformed {} to JakartaEE {}", inputFile.name, outputFile.name)
