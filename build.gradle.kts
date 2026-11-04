@@ -1,3 +1,5 @@
+import org.gradle.plugin.compatibility.compatibility
+
 /*
  * Copyright 2022 Netflix, Inc.
  *
@@ -60,7 +62,12 @@ gradlePlugin {
             implementationClass = "com.netflix.gradle.jakartaee.JakartaEeMigrationPlugin"
             displayName = "Gradle Jakarta EE Migration Plugin"
             description = project.description
-           tags.set(listOf("nebula", "javaee", "jakartaee"))
+            tags.set(listOf("nebula", "javaee", "jakartaee"))
+            compatibility {
+                features {
+                    configurationCache = true
+                }
+            }
         }
     }
 }
