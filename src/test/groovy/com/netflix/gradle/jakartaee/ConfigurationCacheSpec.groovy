@@ -313,6 +313,7 @@ jakartaeeMigration {
 
     def 'configuration cache invalidates when extension configuration changes'() {
         given:
+        // Recheck the edited script directly instead of waiting for filesystem-watcher events.
         buildFile << """
 dependencies {
     implementation 'javax.servlet:javax.servlet-api:3.1.0'
@@ -324,14 +325,14 @@ jakartaeeMigration {
 """
 
         when:
-        def firstRun = runTasks('resolveRuntimeClasspath')
+        def firstRun = runTasks('resolveRuntimeClasspath', '--no-watch-fs')
 
         then:
         firstRun.output.contains('Configuration cache entry stored')
 
         when:
         buildFile.text = buildFile.text.replace('substitute()', 'migrate()')
-        def thirdRun = runTasks('resolveRuntimeClasspath')
+        def thirdRun = runTasks('resolveRuntimeClasspath', '--no-watch-fs')
 
         then:
         thirdRun.output.contains('Configuration cache entry stored')

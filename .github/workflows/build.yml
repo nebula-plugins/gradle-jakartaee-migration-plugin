@@ -41,4 +41,6 @@ jobs:
       - name: Gradle build
         run: ./gradlew --stacktrace build
         env:
+          JAVA8_HOME: ${{ env.JAVA_HOME_8_X64 }}
+          JAVA21_HOME: ${{ env.JAVA_HOME_21_X64 }}
           JDK_VERSION_FOR_TESTS: ${{ matrix.java }}
