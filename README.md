@@ -13,7 +13,7 @@ Provides Gradle capabilities, transforms and dependency substitutions to ease th
 - [Capabilities](https://docs.gradle.org/current/userguide/component_capabilities.html) to cause legacy and modern API artifacts of the EE specification to conflict
 - [Capabilities Resolution](https://docs.gradle.org/current/userguide/dependency_capability_conflict.html) to resolve those capability conflicts by selecting the artifact providing the highest specification version:
 - [Artifact Transforms](https://docs.gradle.org/current/userguide/artifact_transforms.html) to automate the migration of `javax` to `jakarta` packages for legacy artifacts, avoiding needing to fork or manage multiple release lines for these libraries 
-- Compatible with Gradle 4.0 and later
+- [Bounded Gradle compatibility validation](#gradle-compatibility)
 - [Dependency Substitutions](https://docs.gradle.org/current/userguide/resolution_rules.html#sec:dependency_substitution_rules) allow `javax` specifications to be automaticallly substituted for a JakartaEE version, avoiding having to configure replacements on the classpath
 
 ### Supported Artifacts
@@ -64,6 +64,29 @@ Migration finished for archive [reload4j-1.2.22.jar]
 Migration completed successfully in [46] milliseconds
 Transformed reload4j-1.2.22.jar to JakartaEE reload4j-1.2.22-jakartaee.jar
 ```
+
+## Gradle Compatibility
+
+The previous claim of compatibility with **Gradle 4.0 and later was incorrect for the current implementation**. On Gradle 4.0 with JDK 8, applying the plugin fails while creating `JakartaEeMigrationExtension` because required Gradle provider APIs are absent. Gradle 4.0 also rejects `--configuration-cache` and silently ignores the unsafe Isolated Projects property; setting that property does not demonstrate isolation support.
+
+The focused [Isolated Projects validation](docs/isolated-projects-validation.md) covers these exact environments:
+
+| Gradle | Fixture JVM | Result |
+| --- | --- | --- |
+| 8.6 | JDK 21 | Project-local migration workflows pass strict cache/isolation checks; child Maven publication creation fails isolation even without this plugin |
+| 9.6.1 | JDK 21 | Project-local migration workflows, Maven publishing and outgoing variants pass the bounded strict cache/isolation checks |
+| 4.0 | JDK 8 | Expected-failure characterization of the obsolete minimum claim |
+
+These results do not establish a new minimum, certify intermediate versions, or cover every consumer customization. Choosing a supported minimum, deciding whether to restore older-version compatibility, and validating the full CI JVM matrix remain support-policy/release decisions. No implementation compatibility floor is changed by this validation.
+
+On **both 8.6 and 9.6.1**, enable Isolated Projects with:
+
+```sh
+./gradlew <tasks> --configuration-cache --configuration-cache-problems=fail \
+  -Dorg.gradle.unsafe.isolated-projects=true
+```
+
+The stable `--isolated-projects` flag and `org.gradle.isolated-projects` property arrive in Gradle 9.7 and are not the flags tested here. Apply and configure the plugin in each participating project, or through a project convention plugin applied locally. Root-only application remains root-only. Use same-project configurations with the named/`Configuration` overloads; accessing another project's mutable configurations is incompatible with isolation. Apply the Java plugin before calling no-argument `migrate()`, `substitute()` or `transform()`.
 
 ## Applying the Plugin
 
