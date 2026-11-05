@@ -117,7 +117,7 @@ class PublishingIsolationSpec extends Specification {
         where:
         // 8.6 cannot isolate Maven publication creation in a child, even without this plugin.
         // PublishingIsolationCharacterizationSpec retains that independent Gradle limitation.
-        [version, operation, dsl, automatic, migrated] << ['9.6.1'].collectMany { v ->
+        [version, operation, dsl, automatic, migrated] << ['9.6.1', '9.8.2'].collectMany { v ->
             [
                 [v, 'default application', '', false, false],
                 [v, 'automatic migration', 'migrate()', true, true],

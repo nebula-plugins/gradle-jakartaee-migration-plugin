@@ -202,7 +202,9 @@ class IsolatedProjectsSpec extends Specification {
                 def conflict = runner(unresolved, version, isolated, ['verifyMigration']).buildAndFail()
                 assert conflict.output.contains('servlet-api')
                 assert conflict.output.contains('tomcat-embed-core')
-                assert conflict.output.contains('conflict on capability')
+                // Gradle 9.8 changed the sentence around this capability-conflict diagnostic.
+                assert conflict.output.contains('Cannot select module')
+                assert conflict.output.contains("capability 'com.netflix.gradle.jakartaee:servlet-api:")
                 buildScript += "\njakartaeeMigration { ${resolver} }\n"
             }
             write(root, 'build.gradle', buildScript)

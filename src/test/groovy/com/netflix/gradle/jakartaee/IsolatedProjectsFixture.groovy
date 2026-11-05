@@ -16,7 +16,7 @@ import java.util.jar.JarOutputStream
 /** Local repositories and task inputs shared by the bounded compatibility checks. */
 class IsolatedProjectsFixture {
     // Pin evidence to exact distributions; changing the wrapper must not silently expand claims.
-    static final List<String> VERSIONS = ['8.6', '9.6.1']
+    static final List<String> VERSIONS = ['8.6', '9.6.1', '9.8.2']
 
     static File projectDirectory(File root, String path) {
         path == ':' ? root : new File(root, path.substring(1).replace(':', '/'))
@@ -108,13 +108,16 @@ class IsolatedProjectsFixture {
 
     static GradleRunner runner(File root, String version, boolean isolated, List<String> tasks) {
         assert VERSIONS.contains(version): "Review isolation flags before extending the tested matrix"
-        // Both pinned versions predate --isolated-projects / org.gradle.isolated-projects (9.7).
-        // Explicit false prevents ambient unsafe isolation settings from contaminating the control.
+        // The stable CLI flags arrived in 9.7; older distributions need the unsafe property.
+        // Explicitly disable isolation in controls to override ambient user-home settings.
+        def isolationArguments = version == '9.8.2' ?
+            [isolated ? '--isolated-projects' : '--no-isolated-projects'] :
+            ["-Dorg.gradle.unsafe.isolated-projects=${isolated}"]
         // Re-read temporary fixture files each build: macOS watcher notifications can arrive
         // after a rapid TestKit replay, either missing an edit or invalidating one build late.
         GradleRunner.create().withProjectDir(root).withPluginClasspath().withGradleVersion(version)
-            .withArguments((tasks + ['--configuration-cache', '--configuration-cache-problems=fail',
-                "-Dorg.gradle.unsafe.isolated-projects=${isolated}", '--no-watch-fs', '--stacktrace', '--max-workers=2'])
+            .withArguments((tasks + isolationArguments + ['--configuration-cache', '--configuration-cache-problems=fail',
+                '--no-watch-fs', '--stacktrace', '--max-workers=2'])
                 .collect { it.toString() })
     }
 

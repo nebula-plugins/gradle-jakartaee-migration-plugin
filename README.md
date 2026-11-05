@@ -75,6 +75,7 @@ The focused [Isolated Projects validation](docs/isolated-projects-validation.md)
 | --- | --- | --- |
 | 8.6 | JDK 21 | Project-local migration workflows pass strict cache/isolation checks; child Maven publication creation fails isolation even without this plugin |
 | 9.6.1 | JDK 21 | Project-local migration workflows, Maven publishing and outgoing variants pass the bounded strict cache/isolation checks |
+| 9.8.2 | JDK 21 | Same bounded checks pass using the stable isolation CLI flags |
 | 4.0 | JDK 8 | Expected-failure characterization of the obsolete minimum claim |
 
 These results do not establish a new minimum, certify intermediate versions, or cover every consumer customization. Choosing a supported minimum, deciding whether to restore older-version compatibility, and validating the full CI JVM matrix remain support-policy/release decisions. No implementation compatibility floor is changed by this validation.
@@ -86,7 +87,13 @@ On **both 8.6 and 9.6.1**, enable Isolated Projects with:
   -Dorg.gradle.unsafe.isolated-projects=true
 ```
 
-The stable `--isolated-projects` flag and `org.gradle.isolated-projects` property arrive in Gradle 9.7 and are not the flags tested here. Apply and configure the plugin in each participating project, or through a project convention plugin applied locally. Root-only application remains root-only. Use same-project configurations with the named/`Configuration` overloads; accessing another project's mutable configurations is incompatible with isolation. Apply the Java plugin before calling no-argument `migrate()`, `substitute()` or `transform()`.
+On **9.8.2**, the tests use the stable CLI flags (`--isolated-projects` to enable isolation, `--no-isolated-projects` for ordinary controls):
+
+```sh
+./gradlew <tasks> --configuration-cache --configuration-cache-problems=fail --isolated-projects
+```
+
+The stable CLI flags and `org.gradle.isolated-projects` property are available from Gradle 9.7; the matrix verifies them on 9.8.2. Apply and configure the plugin in each participating project, or through a project convention plugin applied locally. Root-only application remains root-only. Use same-project configurations with the named/`Configuration` overloads; accessing another project's mutable configurations is incompatible with isolation. Apply the Java plugin before calling no-argument `migrate()`, `substitute()` or `transform()`.
 
 ## Applying the Plugin
 
